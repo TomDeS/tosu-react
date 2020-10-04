@@ -653,19 +653,11 @@ figure figcaption {
 * Nyan cats
 */
 
-body {
+body.nyanify {
   background-color: #036;
 }
-
-.cat,
-.poptart,
-.head,
-.feet,
-.tail,
-.rainbow,
-.sprite,
-.stars li,
-.stars li i {
+body.nyanify .rainbow,
+body.nyanify .sprite {
   position: absolute;
   background-repeat: no-repeat;
   animation-iteration-count: infinite;
@@ -673,7 +665,7 @@ body {
   animation-timing-function: step-end;
 }
 
-.rainbow {
+body.nyanify .rainbow {
   left: 0;
   right: 0;
   bottom: 0;
@@ -682,7 +674,7 @@ body {
   overflow: hidden;
 }
 
-.rainbow .sprite {
+body.nyanify .rainbow .sprite {
   left: 0;
   right: 0;
   top: 0;
