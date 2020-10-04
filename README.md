@@ -1,2 +1,3 @@
 # tosu-react
-A recreation of tosu.be in React
+
+A tosu.be clone made in React.
