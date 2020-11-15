@@ -1,10 +1,14 @@
-import React from 'react';
-import { PageProps } from 'gatsby';
+import React from 'react'
+import { PageProps } from 'gatsby'
+import Navigation from '@/components/Navigation'
 
 const NotFound: React.FC<PageProps> = () => (
   <main>
-    <p>Sorry, page not found!</p>
+    <div className="content-wrapper">
+      <Navigation />
+      <p>Sorry, page not found!</p>
+    </div>
   </main>
-);
+)
 
-export default NotFound;
+export default NotFound

@@ -1,15 +1,8 @@
 import React, { useState } from 'react'
 
 import { Link } from 'gatsby'
-import NyanifyToggle from './NyanifyToggle'
 
 const Navigation = () => {
-  const [nyanify, setNyanify] = useState(false)
-
-  const toggle = () => {
-    setNyanify(!nyanify)
-  }
-
   return (
     <nav id="navbar-main" aria-label="Primary navigation">
       <Link to="/">Tosu.be</Link>
@@ -25,7 +18,13 @@ const Navigation = () => {
           </Link>
         </li>
         <li>
-          <NyanifyToggle />
+          <Link
+            to="/404"
+            aria-label="menu item"
+            activeClassName="nav-item--active"
+          >
+            Random race
+          </Link>
         </li>
       </ul>
     </nav>
