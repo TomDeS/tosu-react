@@ -18,7 +18,7 @@ const IndexPage = () => (
           <div className="column">
             <p>
               Here are randomly generated bank account numbers. The Dutch bank account number (NL) passes the 11-test and has the bank code of an existing bank. For Belgium, the bank code is a random number and may or may not match an existing bank.
-            All generated bank accounts should pass most tests. If a invalid bank account number was generated, please copy it and log <a href="https://github.com/TomDeS/tosu-react/issues">an issue</a>.
+              All generated bank accounts should pass most tests. If a invalid bank account number was generated, please copy it and log{" "}<a href="https://github.com/TomDeS/tosu-react/issues">an issue</a>.
             </p>
 
           </div>

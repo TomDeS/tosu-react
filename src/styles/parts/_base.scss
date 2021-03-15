@@ -1,0 +1,49 @@
+html {
+  scrollbar-color: var(--scrollbar-thumb) var(--background-body);
+  scrollbar-width: thin;
+  overflow-y: scroll;
+  min-height: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  word-break: break-word;
+  hyphens: auto;
+  overflow-x: hidden;
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  font-weight: var(--font-weight);
+  line-height: var(--line-height);
+}
+
+body {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  word-wrap: break-word;
+  color: var(--text-main);
+  background: var(--background-body);
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+textarea {
+  transition: background-color var(--animation-duration) linear,
+    border-color var(--animation-duration) linear,
+    color var(--animation-duration) linear,
+    box-shadow var(--animation-duration) linear,
+    transform var(--animation-duration) ease;
+}
+
+// Unfortunately, Gatsby adds/requires a wrapper, so we have to style that one instead of the body
+// https://github.com/gatsbyjs/gatsby/issues/7310
+#gatsby-focus-wrapper {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+header,
+footer {
+  display: grid;
+  place-items: center;
+}

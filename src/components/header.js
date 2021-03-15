@@ -1,13 +1,11 @@
-import { Link } from "gatsby"
-import React from "react"
+import { Link } from 'gatsby'
+import React from 'react'
 
 const Header = ({ siteTitle }) => (
   <header>
     <nav id="navbar-main" aria-label="Primary navigation">
-      <Link to="/">
-        <h1>{siteTitle}</h1>
-      </Link>
-      <ul>
+      <Link to="/">{siteTitle}</Link>
+      <ul className="site-nav">
         <li>
           <a href="#bank">Bank accounts</a>
         </li>
