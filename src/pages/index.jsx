@@ -47,9 +47,6 @@ const IndexPage = () => (
         <Race />
       </Section>
 
-
-
-
     </div>
   </Layout>
 )

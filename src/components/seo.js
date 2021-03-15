@@ -5,9 +5,10 @@
  * See: https://www.gatsbyjs.com/docs/use-static-query/
  */
 
-import React from "react"
-import { Helmet } from "react-helmet"
-import { useStaticQuery, graphql } from "gatsby"
+import React from 'react'
+import { Helmet } from 'react-helmet'
+import { useStaticQuery, graphql } from 'gatsby'
+import ThemeContext from '../context/ThemeContext'
 
 function SEO({ description = ``, meta = [], title }) {
   const { site } = useStaticQuery(
@@ -26,32 +27,36 @@ function SEO({ description = ``, meta = [], title }) {
   const defaultTitle = site.siteMetadata?.title
 
   return (
-    <Helmet
-      htmlAttributes={{ lang: "en", class: "" }}
-      title={title}
-      bodyAttributes={{
-        class: "",
-      }}
-      titleTemplate={defaultTitle ? `%s | ${defaultTitle}` : null}
-      meta={[
-        {
-          name: `description`,
-          content: metaDescription,
-        },
-        {
-          property: `og:title`,
-          content: title,
-        },
-        {
-          property: `og:description`,
-          content: metaDescription,
-        },
-        {
-          property: `og:type`,
-          content: `website`,
-        },
-      ].concat(meta)}
-    />
+    <ThemeContext.Consumer>
+      {(theme) => (
+        <Helmet
+          htmlAttributes={{
+            lang: 'en',
+            class: `${theme.jonify ? 'jonify' : 'default'}`,
+          }}
+          title={title}
+          titleTemplate={defaultTitle ? `%s | ${defaultTitle}` : null}
+          meta={[
+            {
+              name: `description`,
+              content: metaDescription,
+            },
+            {
+              property: `og:title`,
+              content: title,
+            },
+            {
+              property: `og:description`,
+              content: metaDescription,
+            },
+            {
+              property: `og:type`,
+              content: `website`,
+            },
+          ].concat(meta)}
+        />
+      )}
+    </ThemeContext.Consumer>
   )
 }
 
