@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import useSound from 'use-sound'
 
 import { GenerateRandomNumber } from '../../utilities/random'
@@ -63,7 +63,7 @@ export default class Race extends React.Component<any, RaceProps> {
       return filtered
     }, [])
 
-    this.setState({ racerList }, () => console.log('this.state'))
+    this.setState({ racerList })
   }
 
   addRacer(newName: string) {
@@ -80,32 +80,29 @@ export default class Race extends React.Component<any, RaceProps> {
     }
     // Ok, allow the racer to the game
     else {
-      this.setState(
-        (state) => {
-          // Select a random score from the availble ones
-          const racerScore = this.state.availableScores[
-            GenerateRandomNumber(0, this.state.availableScores.length)
-          ]
+      this.setState((state) => {
+        // Select a random score from the availble ones
+        const racerScore = this.state.availableScores[
+          GenerateRandomNumber(0, this.state.availableScores.length)
+        ]
 
-          // That score is no longer available
-          const availableScores = this.state.availableScores.filter(
-            (score) => score !== racerScore
-          )
+        // That score is no longer available
+        const availableScores = this.state.availableScores.filter(
+          (score) => score !== racerScore
+        )
 
-          // Assing score to player
-          const racerList = [
-            ...state.racerList,
-            { name: newName, score: racerScore },
-          ]
+        // Assing score to player
+        const racerList = [
+          ...state.racerList,
+          { name: newName, score: racerScore },
+        ]
 
-          return {
-            started: false,
-            racerList,
-            availableScores,
-          }
-        },
-        () => console.log('this.state.availableScores')
-      )
+        return {
+          started: false,
+          racerList,
+          availableScores,
+        }
+      })
     }
   }
 
@@ -157,7 +154,6 @@ function Form(props) {
   const handleChange = (e) => {
     // we need to check on type checkbox:
     // https://stackoverflow.com/a/61488140/14375887
-
     const { name, value, type } = e.target
 
     setFormData((prevState) => ({
@@ -166,10 +162,11 @@ function Form(props) {
     }))
   }
 
-  const saveSettings = (e) => {
-    e.preventDefault()
+  // save settings when formData is changed
+  // this triggers an update also when racers are added. Do we want this?
+  useEffect(() => {
     props.changeSettings(formData.duration, formData.sound)
-  }
+  }, [formData])
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -226,9 +223,7 @@ function Form(props) {
               onChange={handleChange}
               value={formData.sound}
             />
-            <span>
-              Enable sound (warning: doesn't end until you reload the page)
-            </span>
+            <span>Enable sound</span>
           </label>
 
           <div className="row">
@@ -246,14 +241,6 @@ function Form(props) {
               onChange={handleChange}
             ></input>
           </div>
-          <button
-            type="submit"
-            className="button"
-            onClick={saveSettings}
-            disabled={props.raceStarted}
-          >
-            Save settings
-          </button>
         </details>
       </div>
     </form>
@@ -318,11 +305,9 @@ function Racer(props) {
             <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4z" />
           </svg>
         </button>
-        <span className="racer--name">
-        {props.name}{' '}
-        </span>
+        <span className="racer--name">{props.name} </span>
         <span
-        className="racer--score"
+          className="racer--score"
           style={{
             ...{
               transitionDelay: props.duration + 's',
