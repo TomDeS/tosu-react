@@ -1,8 +1,8 @@
-import React, { useState } from "react"
-import useSound from "use-sound"
+import React, { useState } from 'react'
+import useSound from 'use-sound'
 
-import {GenerateRandomNumber} from "../../utilities/random"
-import nyan from "../../sound/nyan.mp3"
+import { GenerateRandomNumber } from '../../utilities/random'
+import nyan from '../../sound/nyan.mp3'
 
 /**
  * Race component
@@ -63,25 +63,25 @@ export default class Race extends React.Component<any, RaceProps> {
       return filtered
     }, [])
 
-    this.setState({ racerList }, () => console.log("this.state"))
+    this.setState({ racerList }, () => console.log('this.state'))
   }
 
   addRacer(newName: string) {
     // See if there are any scores left
     if (this.state.availableScores.length === 1) {
       // All possible scores have been used, start the game!
-      console.log("max number of racers reached, game starts now!")
+      console.log('max number of racers reached, game starts now!')
       this.setState({ started: true })
     }
     // Check if we have a duplicate
-    else if (this.state.racerList.some(racer => racer.name === newName)) {
-      console.log("duplicate!")
+    else if (this.state.racerList.some((racer) => racer.name === newName)) {
+      console.log('duplicate!')
       return null
     }
     // Ok, allow the racer to the game
     else {
       this.setState(
-        state => {
+        (state) => {
           // Select a random score from the availble ones
           const racerScore = this.state.availableScores[
             GenerateRandomNumber(0, this.state.availableScores.length)
@@ -89,7 +89,7 @@ export default class Race extends React.Component<any, RaceProps> {
 
           // That score is no longer available
           const availableScores = this.state.availableScores.filter(
-            score => score !== racerScore
+            (score) => score !== racerScore
           )
 
           // Assing score to player
@@ -104,7 +104,7 @@ export default class Race extends React.Component<any, RaceProps> {
             availableScores,
           }
         },
-        () => console.log("this.state.availableScores")
+        () => console.log('this.state.availableScores')
       )
     }
   }
@@ -133,7 +133,7 @@ export default class Race extends React.Component<any, RaceProps> {
         />
 
         <div
-          className={`race-canvas ${this.state.started ? "race-started" : ""}`}
+          className={`race-canvas ${this.state.started ? 'race-started' : ''}`}
         >
           <List
             racers={this.state.racerList}
@@ -149,41 +149,41 @@ export default class Race extends React.Component<any, RaceProps> {
 
 function Form(props) {
   const [formData, setFormData] = useState({
-    racerName: "",
+    racerName: '',
     duration: props.duration,
     sound: props.sound,
   })
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     // we need to check on type checkbox:
     // https://stackoverflow.com/a/61488140/14375887
 
     const { name, value, type } = e.target
 
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      [name]: type === "checkbox" ? !prevState[name] : value,
+      [name]: type === 'checkbox' ? !prevState[name] : value,
     }))
   }
 
-  const saveSettings = e => {
+  const saveSettings = (e) => {
     e.preventDefault()
     props.changeSettings(formData.duration, formData.sound)
   }
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault()
     if (!formData.racerName.trim()) {
       return
     }
     props.addRacer(formData.racerName)
-    setFormData(prevState => ({
+    setFormData((prevState) => ({
       ...prevState,
-      racerName: "",
+      racerName: '',
     }))
   }
 
-  const startRace = e => {
+  const startRace = (e) => {
     props.startRace()
   }
 
@@ -267,12 +267,12 @@ function List(props) {
 
   return (
     <ul role="list" className="list-none">
-      {props.racers.map(racer => (
+      {props.racers.map((racer) => (
         <Racer
           name={racer.name}
           score={racer.score}
           key={racer.name}
-          deleteRacer={data => props.deleteRacer(data)}
+          deleteRacer={(data) => props.deleteRacer(data)}
           started={props.started}
           duration={props.settings.duration}
         />
@@ -288,56 +288,63 @@ function List(props) {
  */
 function Racer(props) {
   let duration = {
-    transitionDuration: props.duration + "s",
+    transitionDuration: props.duration + 's',
   }
 
   let size = {}
   if (props.started) {
-    size = { width: props.score + "%" }
+    size = { width: props.score + '%' }
   }
 
   return (
-    <li>
-      <button
-        type="button"
-        onClick={() => props.deleteRacer(props.name)}
-        className="button__reset icon"
-        aria-label="Remove participant"
-        title="Remove participant"
-      >
-        <svg
-          className="w-4 h-4"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="black"
-          width="48px"
-          height="48px"
+    <li className="race">
+      <div className="racer">
+        <button
+          type="button"
+          onClick={() => props.deleteRacer(props.name)}
+          className="button__reset icon"
+          aria-label="Remove participant"
+          title="Remove participant"
         >
-          <path d="M0 0h24v24H0V0z" fill="none" />
-          <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4z" />
-        </svg>
-      </button>
-      {props.name}{" "}
-      <span
-        style={{
-          ...{
-            transitionDelay: props.duration + "s",
-            transitionProperty: "visibility",
-          },
-          ...{ visibility: props.started ? "visible" : "hidden" },
-          ...{},
-        }}
-      >
-        ({props.score})
-      </span>
-      <div className="box" style={{ ...duration, ...size }}></div>
-      <div
-        className="cat"
-        style={{
-          ...duration,
-          ...{ visibility: props.started ? "visible" : "hidden" },
-        }}
-      ></div>
+          <svg
+            className="w-4 h-4"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="black"
+            width="48px"
+            height="48px"
+          >
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4z" />
+          </svg>
+        </button>
+        <span className="racer--name">
+        {props.name}{' '}
+        </span>
+        <span
+        className="racer--score"
+          style={{
+            ...{
+              transitionDelay: props.duration + 's',
+              transitionProperty: 'visibility',
+            },
+            ...{ visibility: props.started ? 'visible' : 'hidden' },
+            ...{},
+          }}
+        >
+          ({props.score})
+        </span>
+      </div>
+      <div className="track">
+        <div className="track--progress" style={{ ...duration, ...size }}></div>
+        <div
+          className="track--cat"
+          style={{
+            ...duration,
+            ...{ visibility: props.started ? 'visible' : 'hidden' },
+          }}
+        ></div>
+      </div>
     </li>
   )
 }
@@ -345,11 +352,11 @@ function Racer(props) {
 /**
  * Start race - must be a component to call useSound
  */
-const StartRace = props => {
+const StartRace = (props) => {
   const [play] = useSound(nyan)
   const [started, setStarted] = useState(false)
 
-  const handler = e => {
+  const handler = (e) => {
     e.preventDefault()
     props.startRace()
     if (props.playSound) {
