@@ -9,13 +9,13 @@ const Header = ({ siteTitle }) => (
       <Link to="/">{siteTitle}</Link>
       <ul className="site-nav">
         <li>
-          <a href="#bank">Bank accounts</a>
+          <a href="/#bank">Bank accounts</a>
         </li>
         <li>
-          <a href="#crypto">Crypto</a>
+          <a href="/#crypto">Crypto</a>
         </li>
         <li>
-          <a href="#race">Race</a>
+          <a href="/#race">Race</a>
         </li>
         <li>
           <ThemeContext.Consumer>
