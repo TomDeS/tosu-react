@@ -32,9 +32,9 @@ const Layout = ({ children }) => {
               >
                 MIT License
               </a>
-              . Issues or improvements? Suggest (or better yet: create a pull
-              request) them on{' '}
-              <a href="https://github.com/TomDeS/tosu-react/issues">GitHub</a>.
+              . Issues, improvements or questions? Create a issue on{' '}
+              <a href="https://github.com/TomDeS/tosu-react/issues">GitHub</a>{' '}
+              (or better yet: create a pull request).
             </p>
 
             <div className="row">
