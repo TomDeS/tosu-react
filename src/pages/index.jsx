@@ -41,7 +41,7 @@ const IndexPage = () => (
         <p>
           Let's see who is the fastest.
           Add participant names in the below field and click on 'add'. Done? Then start the race!
-          First one to the finish wins. Want to make it super fun? Tick the sound checkbox under 'settings'
+          Who gets the farthest before the time runs out wins. Want to make it super fun? Tick the sound checkbox under 'settings'
           and set the duration to like a million seconds (but not really a million though).
         </p>
         <Race />
