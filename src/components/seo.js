@@ -11,9 +11,6 @@ import { Helmet } from 'react-helmet'
 import ThemeContext from '../context/ThemeContext'
 
 function SEO({ description = ``, meta = [], title }) {
-  const metaDescription = description || site.siteMetadata.description
-  const defaultTitle = site.siteMetadata?.title
-
   return (
     <ThemeContext.Consumer>
       {(theme) => (
