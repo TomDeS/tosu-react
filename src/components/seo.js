@@ -7,22 +7,10 @@
 
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import { useStaticQuery, graphql } from 'gatsby'
+
 import ThemeContext from '../context/ThemeContext'
 
 function SEO({ description = ``, meta = [], title }) {
-  const { site } = useStaticQuery(
-    graphql`
-      query {
-        site {
-          siteMetadata {
-            title
-          }
-        }
-      }
-    `
-  )
-
   const metaDescription = description || site.siteMetadata.description
   const defaultTitle = site.siteMetadata?.title
 
@@ -34,24 +22,15 @@ function SEO({ description = ``, meta = [], title }) {
             lang: 'en',
             class: `${theme.jonify ? 'jonify' : 'default'}`,
           }}
-          title={title}
-          titleTemplate={defaultTitle ? `%s | ${defaultTitle}` : null}
+          title="tosu.be"
           meta={[
             {
               name: `description`,
-              content: metaDescription,
+              content: `Useful tools like bank account generator, SHA-256 encoder, Base64 encoder/decoder and racing!`,
             },
             {
               property: `og:title`,
-              content: title,
-            },
-            {
-              property: `og:description`,
-              content: metaDescription,
-            },
-            {
-              property: `og:type`,
-              content: `website`,
+              content: `tosu.be`,
             },
           ].concat(meta)}
         />
