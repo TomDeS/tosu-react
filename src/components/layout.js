@@ -32,16 +32,23 @@ const Layout = ({ children }) => {
               >
                 MIT License
               </a>
-              . Issues, improvements or questions? Create a issue on{' '}
+              . Issues, improvements or questions? Create an issue on{' '}
               <a href="https://github.com/TomDeS/tosu-react/issues">GitHub</a>{' '}
               (or better yet: create a pull request).
             </p>
 
             <div className="row">
               <p>
-                This website uses electricity and functional cookies (we don't
-                track you). Hosted by{' '}
-                <a href="https://www.netlify.com/">Netlify</a>, thanks!
+                This website uses electricity and functional cookies. Actually
+                we only use local storage, to make things work offline and
+                super-duper fast. We don't track you, sorry.
+              </p>
+            </div>
+
+            <div className="row">
+              <p>
+                Hosted by <a href="https://www.netlify.com/">Netlify</a>,
+                thanks!
               </p>
             </div>
           </div>
