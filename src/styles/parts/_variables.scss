@@ -30,34 +30,36 @@ $breakpoint-small: 800px;
   --text-shadow: none;
 }
 
-.jellefy:root {
-  --background-body: #202b38;
-  --background: #161f27;
-  --background-alt: #1a242f;
-  --selection: #1c76c5;
-  --text-main: #dbdbdb;
-  --text-bright: #fff;
-  --text-muted: #a9b1ba;
-  --text-contrast: var(--text-main);
-  --links: #41adff;
-  --focus: #0096bfab;
-  --border: #526980;
-  --animation-duration: 0.1s;
-  --button-hover: #324759;
-  --scrollbar-thumb: var(--button-hover);
-  --scrollbar-thumb-hover: color-mod(var(--scrollbar-thumb) lightness(+8%));
-  --form-placeholder: #a9a9a9;
-  --font-family: 'Nunito Sans', system-ui, -apple-system, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  --font-family-mono: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
-    'Courier New', monospace;
-  --font-weight: 300;
-  --font-weight-thick: 400;
-  --font-size: 1.25rem;
-  --line-height: 1.625;
-  --max-width: 61.25rem;
-  --text-shadow: none;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-body: #202b38;
+    --background: #161f27;
+    --background-alt: #1a242f;
+    --selection: #1c76c5;
+    --text-main: #dbdbdb;
+    --text-bright: #fff;
+    --text-muted: #a9b1ba;
+    --text-contrast: var(--text-main);
+    --links: #41adff;
+    --focus: #0096bfab;
+    --border: #526980;
+    --animation-duration: 0.1s;
+    --button-hover: #324759;
+    --scrollbar-thumb: var(--button-hover);
+    --scrollbar-thumb-hover: color-mod(var(--scrollbar-thumb) lightness(+8%));
+    --form-placeholder: #a9a9a9;
+    --font-family: 'Nunito Sans', system-ui, -apple-system, 'Segoe UI', Roboto,
+      'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
+      'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-family-mono: SFMono-Regular, Menlo, Monaco, Consolas,
+      'Liberation Mono', 'Courier New', monospace;
+    --font-weight: 300;
+    --font-weight-thick: 400;
+    --font-size: 1.25rem;
+    --line-height: 1.625;
+    --max-width: 61.25rem;
+    --text-shadow: none;
+  }
 }
 
 .jonify:root {
