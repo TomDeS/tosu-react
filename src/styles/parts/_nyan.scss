@@ -15,6 +15,13 @@
   align-items: center;
 }
 
+.racer {
+  color: var(--text-contrast);
+  .icon svg {
+    fill: var(--text-contrast);
+  }
+}
+
 .track--progress {
   display: inline-block;
   height: 1.5rem;
