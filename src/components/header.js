@@ -1,7 +1,6 @@
+import ThemeToggler from '../utilities/ThemeToggler'
 import { Link } from 'gatsby'
 import React from 'react'
-
-import ThemeContext from '../context/ThemeContext'
 
 const Header = ({ siteTitle }) => (
   <header>
@@ -18,13 +17,7 @@ const Header = ({ siteTitle }) => (
           <a href="/#race">Race</a>
         </li>
         <li>
-          <ThemeContext.Consumer>
-            {(theme) => (
-              <button className="theme-switcher" onClick={theme.toggleTheme}>
-                {theme.jonify ? <span>Default</span> : <span>Jonify</span>}
-              </button>
-            )}
-          </ThemeContext.Consumer>
+          <ThemeToggler />
         </li>
       </ul>
     </nav>

@@ -1,8 +1,10 @@
+require('./src/styles/app.scss')
+
 import React from 'react'
 import { ThemeProvider } from './src/context/ThemeContext'
 
-require('./src/styles/app.scss')
+const wrapRootElement = ({ element }) => {
+  return <ThemeProvider>{element}</ThemeProvider>
+}
 
-export const wrapRootElement = ({ element }) => (
-  <ThemeProvider>{element}</ThemeProvider>
-)
+export { wrapRootElement }
