@@ -21,4 +21,5 @@ const GenerateRandomNumber = (min: number, max: number): number => {
 
 export default GenerateRandomNumber
 */
-exports.GenerateRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+exports.GenerateRandomNumber = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1) + min)
