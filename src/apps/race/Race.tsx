@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from "react"
+import useSound from "use-sound"
 import { GenerateRandomNumber } from "../../utilities/random"
+import nyan from "../../sound/nyan.mp3"
 
 const MIN_DURATION = 0
 const DEFAULT_DURATION = 15
 const MAX_DURATION = 1800
+const RANDOM_STEPS = 1000
+const COUNTER_STEPS = 100
+const DURATION_FACTOR = 2
 
 export const Race = () => {
+  const [play, { stop, isPlaying }] = useSound(nyan)
   const [currentRacer, setCurrentRacer] = useState("")
   const [racers, setRacers] = useState([])
   const [started, setStarted] = useState(false)
   const [sound, setSound] = useState(false)
   const [duration, setDuration] = useState("15")
+  const [counter, setCounter] = useState()
+
+  let totalDuration = duration * DURATION_FACTOR
 
   const changeCurrentRacer = (name: string) => {
     setCurrentRacer(name)
@@ -44,19 +53,53 @@ export const Race = () => {
   }
 
   const startRace = () => {
-    // Check if duration is filled in. If not, fall back to default
-
+    // Check if duration is valid and filled in. If not, fall back to default
     if (!duration || isNaN(parseInt(duration, 10))) {
       setDuration(DEFAULT_DURATION.toString())
     }
 
     setStarted(true)
+
+    if (sound) {
+      play()
+    }
   }
+
+  // Monitor if started. This is a trigger for the counter
+  useEffect(() => {
+    if (started) {
+      setCounter(0)
+    }
+  }, [started])
+
+  // Trigger the counter
+  useEffect(() => {
+    if (started) {
+      if (counter < totalDuration) {
+        setTimeout(() => setCounter(counter + 1), COUNTER_STEPS)
+        // Loop sound
+        if (!isPlaying && sound) {
+          play()
+        }
+      } else {
+        stop()
+      }
+    }
+  }, [counter])
 
   const toggleSound = () => {
     const enableSound = !sound
     setSound(enableSound)
   }
+
+  // Play/stop sound on toggle
+  useEffect(() => {
+    if (started && sound && !isPlaying && counter < totalDuration) {
+      play()
+    } else {
+      stop()
+    }
+  }, [sound])
 
   const changeDuration = (seconds: string) => {
     const int = parseInt(seconds, 10)
@@ -74,6 +117,7 @@ export const Race = () => {
   return (
     <section>
       <div className="wrapper">
+        {counter}
         <form>
           <div className="row">
             <RacerInput
@@ -109,7 +153,9 @@ export const Race = () => {
                       deleteRacer={(id: number) => deleteRacer(id)}
                     />
                   </Racer>
-                  {started && <RacerScore duration={duration} />}
+                  {started && (
+                    <RacerScore counter={counter} duration={totalDuration} />
+                  )}
                 </li>
               )
             )}
@@ -162,23 +208,23 @@ const RacerDeleteButton = ({ id, deleteRacer }) => {
   )
 }
 
-const RacerScore = ({ duration }) => {
-  const [counter, setCounter] = useState(0)
-  const [score, setScore] = useState(80) // size of nyan cat
+const RacerScore = ({ counter, duration }) => {
+  const [score, setScore] = useState(0)
+  const [completion, setCompletion] = useState(0)
+  const maxWidth = (duration * RANDOM_STEPS) / 100
 
   useEffect(() => {
-    counter < duration * 10 && setTimeout(() => setCounter(counter + 1), 100)
-    const random = GenerateRandomNumber(score, score + 100)
+    const random = GenerateRandomNumber(score, score + RANDOM_STEPS)
     setScore(random)
+
+    const percentageOfCompletion = score / maxWidth
+    setCompletion(percentageOfCompletion)
   }, [counter])
 
   return (
     <div className="track">
-      <div className="track--wrapper" style={{ width: score + "px" }}>
-        <div
-          className="track--progress"
-          // style={{ width: score - 80 + "px" }}
-        ></div>
+      <div className="track--wrapper" style={{ width: completion + "%" }}>
+        <div className="track--progress"></div>
         <div className="track--cat"></div>
       </div>
     </div>
