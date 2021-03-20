@@ -58,8 +58,9 @@ summary {
   &:focus {
     text-decoration: underline;
   }
+
   &:before {
-    content: '';
+    content: "";
     border-width: 0.4rem;
     border-style: solid;
     border-color: transparent transparent transparent var(--text-main);

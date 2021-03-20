@@ -22,15 +22,7 @@
     "semi": ["error", "never"],
     "indent": ["error", 2],
     "no-multi-spaces": ["error"],
-    "no-use-before-define": [0],
-    "@typescript-eslint/no-use-before-define": [1],
-    "@typescript-eslint/quotes": [
-      2,
-      "backtick",
-      {
-        "avoidEscape": true
-      }
-    ],
+    "react/prop-types": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -42,6 +34,35 @@
       }
     ]
   },
+  "overrides": [
+    {
+      "files": "**/*.+(ts|tsx)",
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": "./tsconfig.json"
+      },
+      "plugins": ["@typescript-eslint/eslint-plugin"],
+      "extends": [
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "eslint-config-prettier/@typescript-eslint"
+      ],
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-var-requires": "off",
+        "no-use-before-define": [0],
+        "@typescript-eslint/no-use-before-define": [1],
+        "@typescript-eslint/quotes": [
+          2,
+          "backtick",
+          {
+            "avoidEscape": true
+          }
+        ]
+      }
+    }
+  ],
   "settings": {
     "import/resolver": {
       "root-import": {

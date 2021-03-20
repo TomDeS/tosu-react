@@ -1,362 +1,313 @@
-import React, { useState, useEffect } from 'react'
-import useSound from 'use-sound'
+import React, { useState, useEffect } from "react"
+import { GenerateRandomNumber } from "../../utilities/random"
 
-import { GenerateRandomNumber } from '../../utilities/random'
-import nyan from '../../sound/nyan.mp3'
+const MIN_DURATION = 0
+const DEFAULT_DURATION = 15
+const MAX_DURATION = 1800
 
-/**
- * Race component
- * Structure:
- *  Race: main component
- *    Form: add participants/change settings
- *    List: wrapper around Racer
- *      Racer: racer details
- *
- *  @TODO: use redux for state management to avoid having to pass data to grand children over children
- *  @TODO: set ease method random for each racer
- */
+export const Race = () => {
+  const [currentRacer, setCurrentRacer] = useState("")
+  const [racers, setRacers] = useState([])
+  const [started, setStarted] = useState(false)
+  const [sound, setSound] = useState(false)
+  const [duration, setDuration] = useState("15")
 
-interface SettingsProps {
-  duration: number
-  sound: boolean
-}
-
-interface RacersProps {
-  name?: string
-  score?: number
-}
-
-interface RaceProps {
-  started: boolean
-  settings: SettingsProps
-  racerList: RacersProps[]
-  availableScores: number[]
-}
-
-export default class Race extends React.Component<any, RaceProps> {
-  constructor(props) {
-    super(props)
-    this.state = {
-      started: false,
-      settings: {
-        duration: 15,
-        sound: false,
-      },
-      racerList: [],
-      availableScores: Array.from({ length: 71 }, (_, i) => i + 15), // possible scores at start: [15-85]
-    }
-
-    this.addRacer = this.addRacer.bind(this)
-    this.deleteRacer = this.deleteRacer.bind(this)
-    this.startRace = this.startRace.bind(this)
-    this.changeSettings = this.changeSettings.bind(this)
+  const changeCurrentRacer = (name: string) => {
+    setCurrentRacer(name)
   }
 
-  deleteRacer(name: string) {
-    // @TODO: Add the score back to the availble ones
+  const addRacer = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    const newRacer = currentRacer
+    const id = racers.length
 
-    // Delete the racer
-    const racerList = this.state.racerList.reduce(function (filtered, racer) {
-      if (racer.name !== name) {
+    setRacers((prevRacers) => [
+      ...prevRacers,
+      { name: newRacer, id: id, deleted: false },
+    ])
+
+    setCurrentRacer("")
+  }
+
+  const deleteRacer = (id: number) => {
+    const racerList = racers.reduce(function (filtered, racer) {
+      if (racer.id !== id) {
+        filtered.push(racer)
+      } else {
+        racer.deleted = true
         filtered.push(racer)
       }
       return filtered
     }, [])
 
-    this.setState({ racerList })
+    setRacers(racerList)
   }
 
-  addRacer(newName: string) {
-    // See if there are any scores left
-    if (this.state.availableScores.length === 1) {
-      // All possible scores have been used, start the game!
-      console.log('max number of racers reached, game starts now!')
-      this.setState({ started: true })
+  const startRace = () => {
+    // Check if duration is filled in. If not, fall back to default
+
+    if (!duration || isNaN(parseInt(duration, 10))) {
+      setDuration(DEFAULT_DURATION.toString())
     }
-    // Check if we have a duplicate
-    else if (this.state.racerList.some((racer) => racer.name === newName)) {
-      console.log('duplicate!')
-      return null
-    }
-    // Ok, allow the racer to the game
-    else {
-      this.setState((state) => {
-        // Select a random score from the availble ones
-        const racerScore = this.state.availableScores[
-          GenerateRandomNumber(0, this.state.availableScores.length)
-        ]
 
-        // That score is no longer available
-        const availableScores = this.state.availableScores.filter(
-          (score) => score !== racerScore
-        )
-
-        // Assing score to player
-        const racerList = [
-          ...state.racerList,
-          { name: newName, score: racerScore },
-        ]
-
-        return {
-          started: false,
-          racerList,
-          availableScores,
-        }
-      })
-    }
-  }
-
-  startRace() {
-    this.setState({ started: true })
-  }
-
-  changeSettings(duration: number, sound: boolean) {
-    this.setState({
-      settings: { duration: duration, sound: sound },
-    })
-  }
-
-  render() {
-    return (
-      <>
-        <Form
-          addRacer={this.addRacer}
-          startRace={this.startRace}
-          nrOfRacers={this.state.racerList.length}
-          raceStarted={this.state.started}
-          changeSettings={this.changeSettings}
-          duration={this.state.settings.duration}
-          sound={this.state.settings.sound}
-        />
-
-        <div
-          className={`race-canvas ${this.state.started ? 'race-started' : ''}`}
-        >
-          <List
-            racers={this.state.racerList}
-            started={this.state.started}
-            deleteRacer={this.deleteRacer}
-            settings={this.state.settings}
-          />
-        </div>
-      </>
-    )
-  }
-}
-
-function Form(props) {
-  const [formData, setFormData] = useState({
-    racerName: '',
-    duration: props.duration,
-    sound: props.sound,
-  })
-
-  const handleChange = (e) => {
-    // we need to check on type checkbox:
-    // https://stackoverflow.com/a/61488140/14375887
-    const { name, value, type } = e.target
-
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: type === 'checkbox' ? !prevState[name] : value,
-    }))
-  }
-
-  // save settings when formData is changed
-  // this triggers an update also when racers are added. Do we want this?
-  useEffect(() => {
-    props.changeSettings(formData.duration, formData.sound)
-  }, [formData])
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (!formData.racerName.trim()) {
-      return
-    }
-    props.addRacer(formData.racerName)
-    setFormData((prevState) => ({
-      ...prevState,
-      racerName: '',
-    }))
-  }
-
-  const startRace = (e) => {
-    props.startRace()
-  }
-
-  return (
-    <form>
-      <div className="row">
-        <input
-          type="text"
-          name="racerName"
-          autoComplete="off"
-          value={formData.racerName}
-          onChange={handleChange}
-          className="input"
-          placeholder="Racer name"
-        />
-        <button
-          type="submit"
-          className="button"
-          onClick={handleSubmit}
-          disabled={props.raceStarted}
-        >
-          Add
-        </button>
-        <StartRace
-          startRace={startRace}
-          isDisabled={props.nrOfRacers === 0 ? true : false}
-          playSound={props.sound}
-        />
-      </div>
-
-      <div className="row">
-        <details>
-          <summary>Settings</summary>
-
-          <label className="checkbox" htmlFor="sound">
-            <input
-              type="checkbox"
-              id="sound"
-              name="sound"
-              onChange={handleChange}
-              value={formData.sound}
-            />
-            <span>Enable sound</span>
-          </label>
-
-          <div className="row">
-            <label htmlFor="duration">Duration (seconds):</label>
-          </div>
-          <div className="row">
-            <input
-              type="number"
-              id="duration"
-              name="duration"
-              min="0"
-              max="1800"
-              required={true}
-              value={formData.duration}
-              onChange={handleChange}
-            ></input>
-          </div>
-        </details>
-      </div>
-    </form>
-  )
-}
-
-function List(props) {
-  if (props.racers.length === 0) {
-    return null
-  }
-
-  return (
-    <ul role="list" className="list-none">
-      {props.racers.map((racer) => (
-        <Racer
-          name={racer.name}
-          score={racer.score}
-          key={racer.name}
-          deleteRacer={(data) => props.deleteRacer(data)}
-          started={props.started}
-          duration={props.settings.duration}
-        />
-      ))}
-    </ul>
-  )
-}
-
-/**
- * Racer is a grandchild of Race. We have to pass the delete function as props:
- * parent => child => grandchild
- * https://stackoverflow.com/questions/40109698/react-call-parent-method-in-child-component
- */
-function Racer(props) {
-  let duration = {
-    transitionDuration: props.duration + 's',
-  }
-
-  let size = {}
-  if (props.started) {
-    size = { width: props.score + '%' }
-  }
-
-  return (
-    <li className="race">
-      <div className="racer">
-        <button
-          type="button"
-          onClick={() => props.deleteRacer(props.name)}
-          className="button__reset icon"
-          aria-label="Remove participant"
-          title="Remove participant"
-        >
-          <svg
-            className="w-4 h-4"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="black"
-            width="48px"
-            height="48px"
-          >
-            <path d="M0 0h24v24H0V0z" fill="none" />
-            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4z" />
-          </svg>
-        </button>
-        <span className="racer--name">{props.name} </span>
-        <span
-          className="racer--score"
-          style={{
-            ...{
-              transitionDelay: props.duration + 's',
-              transitionProperty: 'visibility',
-            },
-            ...{ visibility: props.started ? 'visible' : 'hidden' },
-            ...{},
-          }}
-        >
-          ({props.score})
-        </span>
-      </div>
-      <div className="track">
-        <div className="track--progress" style={{ ...duration, ...size }}></div>
-        <div
-          className="track--cat"
-          style={{
-            ...duration,
-            ...{ visibility: props.started ? 'visible' : 'hidden' },
-          }}
-        ></div>
-      </div>
-    </li>
-  )
-}
-
-/**
- * Start race - must be a component to call useSound
- */
-const StartRace = (props) => {
-  const [play] = useSound(nyan)
-  const [started, setStarted] = useState(false)
-
-  const handler = (e) => {
-    e.preventDefault()
-    props.startRace()
-    if (props.playSound) {
-      play()
-    }
     setStarted(true)
   }
 
+  const toggleSound = () => {
+    const enableSound = !sound
+    setSound(enableSound)
+  }
+
+  const changeDuration = (seconds: string) => {
+    const int = parseInt(seconds, 10)
+    let result = int
+
+    if (int < MIN_DURATION) {
+      result = MIN_DURATION
+    } else if (int > MAX_DURATION) {
+      result = MAX_DURATION
+    }
+
+    setDuration(result.toString())
+  }
+
+  return (
+    <section>
+      <div className="wrapper">
+        <form>
+          <div className="row">
+            <RacerInput
+              racer={currentRacer}
+              onChangeRacer={(name: string) => changeCurrentRacer(name)}
+            />
+            <AddRacerButton
+              isDisabled={started || !currentRacer.length ? true : false}
+              addRacer={(e: React.ChangeEvent<HTMLInputElement>) => addRacer(e)}
+            />
+            <StartRaceButton
+              isDisabled={started || racers.length === 0 ? true : false}
+              startRace={startRace}
+            />
+          </div>
+          <RaceSettings duration={duration} sound={sound}>
+            <EnableSound sound={sound} toggleSound={toggleSound} />
+            <SetDuration
+              duration={duration}
+              onDurationChange={(seconds: string) => changeDuration(seconds)}
+            />
+          </RaceSettings>
+        </form>
+
+        <RaceCanvas started={started}>
+          <ul role="list" className="list-none list--racers">
+            {racers.map((racer) =>
+              racer.deleted ? null : (
+                <li className="racer" key={racer.id}>
+                  <Racer name={racer.name}>
+                    <RacerDeleteButton
+                      id={racer.id}
+                      deleteRacer={(id: number) => deleteRacer(id)}
+                    />
+                  </Racer>
+                  {started && <RacerScore duration={duration} />}
+                </li>
+              )
+            )}
+          </ul>
+        </RaceCanvas>
+      </div>
+    </section>
+  )
+}
+
+const RaceCanvas = ({ children, started }) => {
+  return (
+    <>
+      <div className={`race-canvas ${started ? "race-started" : ""}`}>
+        {children}
+      </div>
+    </>
+  )
+}
+
+const Racer = ({ children, name }) => {
+  return (
+    <div className="racer--details">
+      {name}
+      {children}
+    </div>
+  )
+}
+
+const RacerDeleteButton = ({ id, deleteRacer }) => {
   return (
     <button
-      onClick={handler}
-      className="button"
-      disabled={props.isDisabled || started}
+      className="button__reset icon"
+      aria-label="Remove participant"
+      title="Remove participant"
+      onClick={() => deleteRacer(id)}
     >
+      <svg
+        className="w-4 h-4"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="black"
+        width="48px"
+        height="48px"
+      >
+        <path d="M0 0h24v24H0V0z" fill="none" />
+        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4z" />
+      </svg>
+    </button>
+  )
+}
+
+const RacerScore = ({ duration }) => {
+  const [counter, setCounter] = useState(0)
+  const [score, setScore] = useState(80) // size of nyan cat
+
+  useEffect(() => {
+    counter < duration * 10 && setTimeout(() => setCounter(counter + 1), 100)
+    const random = GenerateRandomNumber(score, score + 100)
+    setScore(random)
+  }, [counter])
+
+  return (
+    <div className="track">
+      <div className="track--wrapper" style={{ width: score + "px" }}>
+        <div
+          className="track--progress"
+          // style={{ width: score - 80 + "px" }}
+        ></div>
+        <div className="track--cat"></div>
+      </div>
+    </div>
+  )
+}
+
+const RacerInput = ({ racer, onChangeRacer }) => {
+  return (
+    <input
+      type="text"
+      name="racer"
+      autoComplete="off"
+      value={racer}
+      onChange={(e) => onChangeRacer(e.target.value)}
+      className="input"
+      placeholder="Racer name"
+    />
+  )
+}
+
+const AddRacerButton = ({ isDisabled, addRacer }) => {
+  return (
+    <button
+      type="submit"
+      className="button"
+      onClick={(e) => addRacer(e)}
+      disabled={isDisabled}
+    >
+      Add
+    </button>
+  )
+}
+
+const StartRaceButton = ({ isDisabled, startRace }) => {
+  return (
+    <button onClick={startRace} className="button" disabled={isDisabled}>
       Start!
     </button>
   )
 }
+
+const RaceSettings = ({ children, sound, duration }) => {
+  const soundEnabled = sound
+  const raceDuration = isNaN(duration) ? DEFAULT_DURATION : duration
+
+  return (
+    <div className="row">
+      <details>
+        <summary>
+          Settings
+          <span className="icon">
+            {soundEnabled ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="black"
+                width="48px"
+                height="48px"
+              >
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="black"
+                width="48px"
+                height="48px"
+              >
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path d="M4.27 3L3 4.27l9 9v.28c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4v-1.73L19.73 21 21 19.73 4.27 3zM14 7h4V3h-6v5.18l2 2z" />
+              </svg>
+            )}
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="black"
+              width="48px"
+              height="48px"
+            >
+              <path d="M0 0h24v24H0z" fill="none" />
+              <path d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z" />
+            </svg>
+          </span>
+          <small>{raceDuration}</small>
+        </summary>
+        {children}
+      </details>
+    </div>
+  )
+}
+
+const EnableSound = ({ sound, toggleSound }) => {
+  return (
+    <label className="checkbox" htmlFor="sound">
+      <input
+        type="checkbox"
+        id="sound"
+        name="sound"
+        onChange={toggleSound}
+        value={sound}
+      />
+      <span>Enable sound</span>
+    </label>
+  )
+}
+
+const SetDuration = ({ duration, onDurationChange }) => {
+  return (
+    <>
+      <div className="row">
+        <label htmlFor="duration">Duration (seconds):</label>
+      </div>
+      <div className="row">
+        <input
+          type="number"
+          id="duration"
+          name="duration"
+          min={MIN_DURATION}
+          max={MAX_DURATION}
+          required={true}
+          value={duration}
+          onChange={(e) => onDurationChange(e.target.value)}
+        ></input>
+      </div>
+    </>
+  )
+}
+
+export default Race

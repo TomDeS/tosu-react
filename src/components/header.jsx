@@ -1,6 +1,6 @@
-import ThemeToggler from '../utilities/ThemeToggler'
 import { Link } from 'gatsby'
 import React from 'react'
+import ThemeToggler from '../utilities/ThemeToggler'
 
 const Header = ({ siteTitle }) => (
   <header>

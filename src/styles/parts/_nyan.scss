@@ -3,6 +3,7 @@
   background-color: rgb(0, 51, 102);
   padding: 2rem;
   margin-top: 1rem;
+  overflow-x: hidden;
 }
 
 .race {
@@ -22,6 +23,22 @@
   }
 }
 
+.list--racers {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.track {
+  max-width: 1px;
+}
+
+.track--wrapper {
+  transition: width 1s;
+
+  display: grid;
+  grid-template-columns:  minmax(0, 1fr) 3rem;
+}
+
 .track--progress {
   display: inline-block;
   height: 1.5rem;
@@ -34,12 +51,11 @@
       rgba(101, 49, 255, 1) 0 100%
     )
     0 0/100% 200%;
-  width: 0%;
+  //width: 100%;
   animation: y 5s linear infinite;
-  transition: width 5s;
 
   &::after {
-    content: '';
+    content: "";
     display: block;
     height: 100%;
     background: linear-gradient(
@@ -69,7 +85,7 @@
   margin-left: -0.6rem;
   width: 3rem;
   height: 1.5rem;
-  background-image: url('../../static/img/nyan/nyan1.svg');
+  background-image: url("../../static/img/nyan/nyan1.svg");
   background-repeat: no-repeat;
   background-position: left center;
   background-size: contain;
@@ -78,21 +94,21 @@
 
 @keyframes cat {
   0% {
-    background-image: url('../../static/img/nyan/nyan1.svg');
+    background-image: url("../../static/img/nyan/nyan1.svg");
   }
   20% {
-    background-image: url('../../static/img/nyan/nyan2.svg');
+    background-image: url("../../static/img/nyan/nyan2.svg");
   }
   40% {
-    background-image: url('../../static/img/nyan/nyan3.svg');
+    background-image: url("../../static/img/nyan/nyan3.svg");
   }
   60% {
-    background-image: url('../../static/img/nyan/nyan4.svg');
+    background-image: url("../../static/img/nyan/nyan4.svg");
   }
   80% {
-    background-image: url('../../static/img/nyan/nyan5.svg');
+    background-image: url("../../static/img/nyan/nyan5.svg");
   }
   100% {
-    background-image: url('../../static/img/nyan/nyan6.svg');
+    background-image: url("../../static/img/nyan/nyan6.svg");
   }
 }
