@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import useSound from 'use-sound'
-import randomNumber from '../../utilities/random'
-import nyan from '../../sound/nyan.mp3'
+import randomNumber from '@/utilities/random'
+import nyan from '@/sound/nyan.mp3'
 
 const MIN_DURATION = 0
 const DEFAULT_DURATION = 15

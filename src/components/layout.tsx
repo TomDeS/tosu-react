@@ -1,52 +1,50 @@
-// eslint-disable-next-line no-use-before-define
-import React from 'react'
+/**
+ * We use some prop drilling(*) to decide on the current theme.
+ * Layout manages the state, gets it from Header, which gets it from ThemeToggler.
+ * Layout then passes it on to SEO:
+ *  Layout (state management)
+ *    |-- SEO (gets theme from Layout)
+ *    |-- Header (gets theme from ThemeToggler)
+ *        |-- ThemeToggler (sets theme)
+ *
+ *  Context was originally used, but replaced by drilling as it's overkill
+ *
+ *  (*) https://kentcdodds.com/blog/prop-drilling
+ */
 
+// eslint-disable-next-line no-use-before-define
+import React, { useState, useEffect } from 'react'
 import Header from './header'
 import SEO from './seo'
+import Footer from './footer'
 
 interface LayoutProps {
   children: React.ReactNode
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => (
-  <>
-    <SEO />
-    <Header siteTitle="tosu.be" />
-    <main>{children}</main>
-    <footer>
-      <div className="wrapper">
-        <div className="row">
-          <p>
-            Published under the{' '}
-            <a
-              href="https://github.com/TomDeS/tosu-react/blob/main/LICENSE"
-              target="_blank"
-              rel="noreferrer"
-            >
-              MIT License
-            </a>
-            . Issues, improvements or questions? Create an issue on{' '}
-            <a href="https://github.com/TomDeS/tosu-react/issues">GitHub</a> (or
-            better yet: create a pull request).
-          </p>
+const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'default')
 
-          <div className="row">
-            <p>
-              This website uses electricity and functional cookies. Actually we
-              only use local storage, to make things work offline and
-              super-duper fast. We don&apos;t track you, sorry.
-            </p>
-          </div>
+  const handleClick = (value: string) => {
+    setTheme(value)
+  }
 
-          <div className="row">
-            <p>
-              Hosted by <a href="https://www.netlify.com/">Netlify</a>, thanks!
-            </p>
-          </div>
-        </div>
-      </div>
-    </footer>
-  </>
-)
+  useEffect(() => {
+    localStorage.setItem('theme', theme)
+  }, [theme])
+
+  return (
+    <>
+      <SEO theme={theme} />
+      <Header
+        siteTitle="tosu.be"
+        theme={theme}
+        handleClick={(value: string) => handleClick(value)}
+      />
+      <main>{children}</main>
+      <Footer />
+    </>
+  )
+}
 
 export default Layout

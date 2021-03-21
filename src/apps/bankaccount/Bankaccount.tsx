@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 
+import randomNumber from '@/utilities/random'
+import CopyButton from '@/utilities/CopyButton'
 import { bicValues } from './bicValues'
-import randomNumber from '../../utilities/random'
-import CopyButton from '../../utilities/CopyButton'
 
 interface BankAccountProps {
   codes: string[]
