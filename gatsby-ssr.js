@@ -1,4 +1,5 @@
-require('./src/styles/app.scss')
+// wrapRootElement in SSR too, not only in browser
+// https://github.com/gatsbyjs/gatsby/issues/15968
 
 import React from 'react'
 import { ThemeProvider } from './src/context/ThemeContext'

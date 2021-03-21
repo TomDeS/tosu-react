@@ -1,0 +1,21 @@
+ul {
+  margin: 0 0 1.5rem 1.5rem;
+  li {
+    margin: 0 0 5px;
+    &::marker {
+      content: '\2013'' ';
+    }
+  }
+}
+
+ul.list-none {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  li {
+    margin: 0;
+    &::marker {
+      content: none;
+    }
+  }
+}

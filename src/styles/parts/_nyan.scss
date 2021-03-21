@@ -1,0 +1,110 @@
+.race-canvas {
+  min-height: 3rem;
+  background-color: rgb(0, 51, 102);
+  padding: 2rem;
+  margin-top: 1rem;
+  overflow-x: hidden;
+}
+
+.race {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  @media (min-width: $breakpoint-small) {
+    grid-template-columns: 20ch minmax(0, 1fr);
+  }
+  align-items: center;
+}
+
+.racer {
+  color: var(--text-contrast);
+  .icon svg {
+    fill: var(--text-contrast);
+  }
+}
+
+.list--racers {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.track--wrapper {
+  transition: width 0.3s;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 3rem;
+}
+
+.track--progress {
+  display: inline-block;
+  height: 1.5rem;
+  background: linear-gradient(
+      rgba(254, 0, 0, 1) 16.67%,
+      rgba(255, 165, 0, 1) 0 33.33%,
+      rgba(255, 255, 0, 1) 0 50%,
+      rgba(0, 251, 0, 1) 0 66.67%,
+      rgba(0, 158, 255, 1) 0 83.33%,
+      rgba(101, 49, 255, 1) 0 100%
+    )
+    0 0/100% 200%;
+  //width: 100%;
+  animation: y 5s linear infinite;
+
+  &::after {
+    content: "";
+    display: block;
+    height: 100%;
+    background: linear-gradient(
+        rgba(254, 0, 0, 1) 16.67%,
+        rgba(255, 165, 0, 1) 0 33.33%,
+        rgba(255, 255, 0, 1) 0 50%,
+        rgba(0, 251, 0, 1) 0 66.67%,
+        rgba(0, 158, 255, 1) 0 83.33%,
+        rgba(101, 49, 255, 1) 0 100%
+      )
+      0 0/100% 200%;
+    animation: inherit;
+    animation-direction: reverse;
+    mask: linear-gradient(90deg, #fff 50%, transparent 0) 0 0/2rem 100%;
+  }
+}
+
+@keyframes y {
+  to {
+    background-position: 0 -200%;
+  }
+}
+
+.track--cat {
+  display: inline-block;
+  position: relative;
+  margin-left: -0.6rem;
+  width: 3rem;
+  height: 1.5rem;
+  background-image: url("../../static/img/nyan/nyan1.svg");
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: contain;
+  animation: cat 0.3s linear infinite;
+}
+
+@keyframes cat {
+  0% {
+    background-image: url("../../static/img/nyan/nyan1.svg");
+  }
+  20% {
+    background-image: url("../../static/img/nyan/nyan2.svg");
+  }
+  40% {
+    background-image: url("../../static/img/nyan/nyan3.svg");
+  }
+  60% {
+    background-image: url("../../static/img/nyan/nyan4.svg");
+  }
+  80% {
+    background-image: url("../../static/img/nyan/nyan5.svg");
+  }
+  100% {
+    background-image: url("../../static/img/nyan/nyan6.svg");
+  }
+}

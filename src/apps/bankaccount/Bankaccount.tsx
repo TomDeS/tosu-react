@@ -1,106 +1,52 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { bicValues } from './bicValues'
-import {GenerateRandomNumber} from '../../utilities/random'
+import randomNumber from '../../utilities/random'
 import CopyButton from '../../utilities/CopyButton'
 
-const GenerateBankAccount = ({
-  countryCode = 'BE',
-}: {
-  countryCode: string
-}) => {
-  let digits: number = 0
-  let bic: string = getBicCode(countryCode).toString()
-  // Get digits
-  switch (countryCode) {
-    case 'NL':
-      digits = getNumbers(10, true)
-      break
-    case 'BE':
-      let subDigits = getNumbers(7, false)
-      digits = calculateModulo(bic, subDigits)
-      break
-    default:
-      break
-  }
-
-  const checkSum: string = calculateCheckSum(countryCode, bic, digits)
-
-  const account = `${countryCode}${checkSum}${bic}${digits}`
-
-  return (
-    <>
-      <span id={account} className="select-all text-mono">
-        {account}
-      </span>
-      <CopyButton data={account} />
-    </>
-  )
+interface BankAccountProps {
+  codes: string[]
 }
 
-export default GenerateBankAccount
-
-function getNumbers(count: number, elevenTest: boolean): number {
-  let i: number = 0
-  let j: number = 0
-  let k: number = 0
-  let p1: number = 0
-  let p2: number = 0
-  let digits: number[] = []
-  let pass11: boolean = false
-  const highestDigit: number = 9
-
-  // get {count} random base 10 numbers
-  for (i = 0; i < count; i++) {
-    if (i === 0) {
-      digits[i] = GenerateRandomNumber(1, highestDigit) // first digit may not be zero
-    } else {
-      digits[i] = GenerateRandomNumber(0, highestDigit)
-    }
-  }
-
-  // If 11-test is applicable, verify generated numbers
-  if (elevenTest) {
-    // check if they pass the 11-test
-    pass11 = perform11test(digits)
-
-    // 11-test failed, try manipulating two digits
-    // we could simply start over, but there's less chance we pass then.
-    if (!pass11) {
-      // take two random digits
-      p1 = GenerateRandomNumber(1, highestDigit)
-      p2 = GenerateRandomNumber(1, highestDigit)
-
-      // make sure we didn't select twice the same digit
-      while (p1 === p2) {
-        p2 = GenerateRandomNumber(0, highestDigit)
-      }
-
-      for (j = 0; j < count && pass11 === false; j++) {
-        digits[p1] = j
-        for (k = 0; k < count && pass11 === false; k++) {
-          digits[p2] = k
-          pass11 = perform11test(digits)
-        }
-      }
-
-      // Check if length is OK
-      if (digits.length !== count) {
-        getNumbers(count, elevenTest)
-      }
-
-      // Re-evaluate pass11
-      if (!pass11) {
-        // We went through all options without success. Start over.
-        getNumbers(count, elevenTest)
-      }
-    }
-  }
-
-  return parseInt(digits.join(''), 10)
+interface AccountWrapperProps {
+  country: string
+  children: React.ReactNode
 }
 
-function calculateModulo(bankIdentification, digits): number {
+function getBicList(country: string): string[] {
+  // Loop through the data and if we have a match, take those.
+  // Array source: https://www.betaalvereniging.nl/en/focus/giro-based-and-online-payments/bank-identifier-code-bic-for-sepa-transactions/
+
+  const bics: string[] = bicValues.reduce((codes: any, currentValue) => {
+    if (currentValue.countryCode === country.toString().toUpperCase()) {
+      codes.push(currentValue.BIC)
+    }
+    return codes
+  }, [])
+
+  // Convert it to a flat list, since all values are possible candidates
+  return bics.flat()
+}
+
+function getRandomBic(country: string): string {
+  const bics: string[] = getBicList(country)
+
+  const bic: string = bics.length
+    ? bics[[randomNumber(0, bics.length - 1)]]
+    : randomNumber(0, 999).toString().padStart(3, '0')
+
+  return bic
+}
+
+function getDigits(count: number): number {
+  const powerLower = 10 ** (count - 1)
+  const powerUpper = 10 ** count
+  const digits = randomNumber(powerLower, powerUpper - 1)
+
+  return digits
+}
+
+function calculateModulo(bankIdentification: string, digits: number): number {
   // 1. Convert bank identification and digits to number
   const identification: number = parseInt(bankIdentification, 10)
 
@@ -117,60 +63,17 @@ function calculateModulo(bankIdentification, digits): number {
   // 4. Add result from modulo to number
   const checkSum = modulo === 97 ? '97' : modulo.toString().padStart(2, '0')
 
-  const result: number = parseInt('' + digits + checkSum, 10)
+  const result: number = parseInt(`${digits}${checkSum}`, 10)
 
   // 5. Return new digits with modulo at the end
   return result
 }
 
-function perform11test(nr: number[]): boolean {
-  let sum: number = 0
-  let j: number = 0
-  let i: number = 0
-
-  for (i = 10; i >= 1; i--) {
-    sum += nr[j] * i
-    j++
-  }
-
-  if (sum % 11 === 0) {
-    return true
-  }
-
-  return false
-}
-
-function getBicCode(countryCode: string): string {
-  let bic: string = ''
-
-  // Loop through the data and if we have a match, take those.
-  // Array source: https://www.betaalvereniging.nl/en/focus/giro-based-and-online-payments/bank-identifier-code-bic-for-sepa-transactions/
-  const allBics: string[] = bicValues.reduce((codes: any, currentValue) => {
-    if (currentValue['countryCode'] === countryCode.toUpperCase()) {
-      codes.push(currentValue['BIC'])
-    }
-    return codes
-  }, [])
-
-  // Convert it to a flat list, since all values are possible candidates
-  const bicList = allBics.flat()
-
-  // If we had a match earlier, choose a random item and return it
-  if (allBics.length) {
-    const bic = bicList[GenerateRandomNumber(0, bicList.length - 1)]
-    return bic
-  }
-  // Fallback: if allBics is empty, generate a number based BIC
-  bic = GenerateRandomNumber(0, 999).toString().padStart(3, '0')
-
-  return bic
-}
-
 function getLetterValue(letters: string): string {
-  let i: number = 0
-  let letterValue: string = ''
+  let i = 0
+  let letterValue = ''
 
-  for (i = 0; i < letters.length; i++) {
+  for (i = 0; i < letters.length; i += 1) {
     // 'A' === 65, but we need it as 10, B=11 and so on
     letterValue += letters.charCodeAt(i) - 55
   }
@@ -184,7 +87,7 @@ function calculateCheckSum(
   numbers: number
 ): string {
   const countryValue = getLetterValue(country)
-  let identification: string = ''
+  let identification = ''
 
   if (country === 'NL') {
     identification = getLetterValue(bankIdentification)
@@ -192,7 +95,7 @@ function calculateCheckSum(
     identification = bankIdentification
   }
 
-  const checkCombination = identification + numbers + countryValue + '00'
+  const checkCombination = `${identification + numbers + countryValue}00`
 
   /*
   Piece-wise calculation D mod 97 can be done in many ways. One such way is as follows:
@@ -209,7 +112,7 @@ function calculateCheckSum(
   let accString: string = checkCombination
   let checkNr: string
   let modNr: number
-  let checkSum: number
+
   let result: string
 
   checkNr = accString.substring(0, 9)
@@ -218,7 +121,7 @@ function calculateCheckSum(
   accString = accString.substring(9, accString.length)
 
   while (accString.length > 0) {
-    checkNr = '' + modNr + accString.substring(0, 7)
+    checkNr = `${modNr}${accString.substring(0, 7)}`
     modNr = parseInt(checkNr, 10) % 97
     accString = accString.substring(7, accString.length)
 
@@ -227,14 +130,91 @@ function calculateCheckSum(
     }
   }
 
-  checkSum = 98 - modNr
+  const checkSum: number = 98 - modNr
 
   // If checksum <= 9; add a leading 0.
   if (checkSum <= 9) {
-    result = '0' + checkSum
+    result = `0${checkSum}`
   } else {
-    result = '' + checkSum
+    result = `${checkSum}`
   }
 
   return result
 }
+
+const AccountWrapper: React.FC<AccountWrapperProps> = ({
+  country,
+  children,
+}) => {
+  const bic = getRandomBic({ country })
+  let digits = 0
+
+  if (country === 'BE') {
+    const subDigits = getDigits(7)
+    digits = calculateModulo(bic, subDigits)
+  } else {
+    digits = getDigits(10)
+  }
+
+  const checksum = calculateCheckSum(country, bic, digits)
+
+  return (
+    <li>
+      <span id={country} className="select-all text-mono">
+        {country}
+        {checksum}
+        {bic}
+        {digits}
+      </span>
+      {children}
+    </li>
+  )
+}
+
+export const BankAccount: React.FC<BankAccountProps> = ({ codes }) => {
+  const [refresh, setRefresh] = useState(false)
+
+  const onSubmit = (e: any) => {
+    e.preventDefault()
+    setRefresh(!refresh)
+  }
+  return (
+    <>
+      <button
+        className="button__reset icon"
+        aria-label="Refresh"
+        title="Refresh"
+        onClick={onSubmit}
+        type="button"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          enableBackground="new 0 0 24 24"
+          viewBox="0 0 24 24"
+          fill="black"
+          width="48px"
+          height="48px"
+        >
+          <g>
+            <path d="M0,0h24v24H0V0z" fill="none" />
+          </g>
+          <g>
+            <g>
+              <path d="M12,5V2L8,6l4,4V7c3.31,0,6,2.69,6,6c0,2.97-2.17,5.43-5,5.91v2.02c3.95-0.49,7-3.85,7-7.93C20,8.58,16.42,5,12,5z" />
+              <path d="M6,13c0-1.65,0.67-3.15,1.76-4.24L6.34,7.34C4.9,8.79,4,10.79,4,13c0,4.08,3.05,7.44,7,7.93v-2.02 C8.17,18.43,6,15.97,6,13z" />
+            </g>
+          </g>
+        </svg>
+      </button>
+      <ul className="list-none">
+        {codes &&
+          codes.map((country: string) => (
+            <AccountWrapper key={country} country={country}>
+              <CopyButton data={country} />
+            </AccountWrapper>
+          ))}
+      </ul>
+    </>
+  )
+}
+export default BankAccount
