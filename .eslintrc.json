@@ -6,7 +6,8 @@
   "extends": [
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
-    "airbnb"
+    "airbnb",
+    "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -44,21 +45,25 @@
       "plugins": ["@typescript-eslint/eslint-plugin"],
       "extends": [
         "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "eslint-config-prettier/@typescript-eslint"
+        "plugin:@typescript-eslint/recommended"
       ],
       "rules": {
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-var-requires": "off",
-        "no-use-before-define": [0],
-        "@typescript-eslint/no-use-before-define": [1],
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": ["error"],
         "@typescript-eslint/quotes": [
           2,
-          "backtick",
+          "single",
           {
             "avoidEscape": true
           }
+        ],
+        "react/require-default-props": [0],
+        "react/jsx-filename-extension": [
+          2,
+          { "extensions": [".js", ".jsx", ".ts", ".tsx"] }
         ]
       }
     }

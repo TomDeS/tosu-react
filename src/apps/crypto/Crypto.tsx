@@ -1,22 +1,98 @@
-import React, { useState } from "react"
+import React, { useState } from 'react'
 
-import SHA256 from "crypto-js/sha256"
-import Base64 from "crypto-js/enc-base64"
-import ENC from "crypto-js/enc-utf8"
-import Hex from "crypto-js/enc-hex"
+import SHA256 from 'crypto-js/sha256'
+import Base64 from 'crypto-js/enc-base64'
+import ENC from 'crypto-js/enc-utf8'
+import Hex from 'crypto-js/enc-hex'
 
-import CopyButton from "../../utilities/CopyButton"
+import CopyButton from '../../utilities/CopyButton'
 
-interface CryptoStateProps {
-  cryptoMethod: string
-  inputText: string
-  cryptoResult: string
+interface CryptoOptionsProps {
+  onChangeMethod(e: string): any
 }
 
-export const Crypto = () => {
-  const [method, setMethod] = useState("sha256")
-  const [cryptoText, setCryptoText] = useState()
-  const [cryptoResult, setCryptoResult] = useState()
+interface CryptoTextProps {
+  input: string
+  onChangeInput(e: string): any
+}
+
+interface SubmitCryptoProps {
+  onSubmit(e: any): any
+}
+
+interface CryptoResultProps {
+  result: string
+  children: React.ReactNode
+}
+
+const CryptoOptions: React.FC<CryptoOptionsProps> = ({ onChangeMethod }) => (
+  <div className="controls" onChange={(e) => onChangeMethod(e.target.value)}>
+    <label className="radio" htmlFor="base64-decode">
+      <input
+        id="base64-decode"
+        type="radio"
+        value="base64decode"
+        name="cryptoMethod"
+      />
+      <span>Base64 decode</span>
+    </label>
+
+    <label className="radio" htmlFor="base64-encode">
+      <input
+        id="base64-encode"
+        type="radio"
+        value="base64encode"
+        name="cryptoMethod"
+      />
+      <span>Base64 encode</span>
+    </label>
+
+    <label className="radio" htmlFor="sha-256">
+      <input
+        id="sha-256"
+        type="radio"
+        value="sha256"
+        name="cryptoMethod"
+        defaultChecked
+      />
+      <span>SHA-256</span>
+    </label>
+  </div>
+)
+
+const CryptoText: React.FC<CryptoTextProps> = ({ input, onChangeInput }) => (
+  <textarea
+    className="input"
+    name="inputText"
+    onChange={(e) => onChangeInput(e.target.value)}
+    id="inputText"
+    value={input}
+    required
+    autoComplete="off"
+    aria-labelledby="label-inputText"
+    rows={10}
+  />
+)
+
+const SubmitCrypto: React.FC<SubmitCryptoProps> = ({ onSubmit }) => (
+  <button type="submit" className="button" onClick={(e) => onSubmit(e)}>
+    Transform
+  </button>
+)
+
+const CryptoResult: React.FC<CryptoResultProps> = ({ result, children }) => (
+  <>
+    <span id="cryptoResult" className="select-all text-mono">
+      {result}
+    </span>
+    {children}
+  </>
+)
+
+export const Crypto: React.FC = () => {
+  const [method, setMethod] = useState<string>('sha256')
+  const [cryptoText, setCryptoText] = useState<string>()
+  const [cryptoResult, setCryptoResult] = useState<string>()
 
   const changeMethod = (name: string) => {
     setMethod(name)
@@ -26,33 +102,40 @@ export const Crypto = () => {
     setCryptoText(input)
   }
 
-  const onSubmit = (e) => {
+  const onSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault()
 
     if (cryptoText) {
-      let result = ""
+      let result = ''
 
       try {
         const input = cryptoText
 
         switch (method) {
-          case "base64decode":
-            const parsedWordArray = Base64.parse(input.toString())
-            result = parsedWordArray.toString(ENC)
-            break
+        case 'base64decode': {
+          const parsedWordArray = Base64.parse(input?.toString() ?? '')
+          result = parsedWordArray.toString(ENC)
+          break
+        }
 
-          case "base64encode":
-            const wordArray = ENC.parse(input.toString())
-            result = Base64.stringify(wordArray)
-            break
+        case 'base64encode': {
+          const wordArray = ENC.parse(input?.toString() ?? '')
+          result = Base64.stringify(wordArray)
+          break
+        }
 
-          case "sha256":
-            result = SHA256(input).toString(Hex)
-            break
+        case 'sha256': {
+          result = SHA256(input ?? '').toString(Hex)
+          break
+        }
+
+        default: {
+          result = 'Strange things are happening'
+        }
         }
       } catch (error) {
         console.error(error)
-        result = "Something went wrong. Are you sure this is a valid value?"
+        result = 'Something went wrong. Are you sure this is a valid value?'
       }
 
       setCryptoResult(result)
@@ -75,70 +158,21 @@ export const Crypto = () => {
           />
         </form>
 
-        {cryptoResult && (
-          <CryptoResult result={cryptoResult}>
-            <CopyButton data="cryptoResult" />
-          </CryptoResult>
-        )}
+        <p>
+          Result: <br />
+          {!cryptoResult && (
+            <span id="cryptoResult" className="select-all text-mono">
+              Just waiting for you to enter data and press the button...
+            </span>
+          )}
+          {cryptoResult && (
+            <CryptoResult result={cryptoResult}>
+              <CopyButton data="cryptoResult" />
+            </CryptoResult>
+          )}
+        </p>
       </div>
     </section>
-  )
-}
-
-const CryptoOptions = ({ onChangeMethod }) => {
-  return (
-    <div className="controls" onChange={(e) => onChangeMethod(e.target.value)}>
-      <label className="radio">
-        <input type="radio" value="base64decode" name="cryptoMethod" />
-        <span>Base64 decode</span>
-      </label>
-
-      <label className="radio">
-        <input type="radio" value="base64encode" name="cryptoMethod" />
-        <span>Base64 encode</span>
-      </label>
-
-      <label className="radio">
-        <input type="radio" value="sha256" name="cryptoMethod" defaultChecked />
-        <span>SHA-256</span>
-      </label>
-    </div>
-  )
-}
-
-const CryptoText = ({ input, onChangeInput }) => {
-  return (
-    <textarea
-      className="input"
-      name={"inputText"}
-      onChange={(e) => onChangeInput(e.target.value)}
-      id={"inputText"}
-      value={input}
-      required={true}
-      autoComplete="off"
-      aria-labelledby="label-inputText"
-      rows={10}
-    />
-  )
-}
-
-const SubmitCrypto = ({ onSubmit }) => {
-  return (
-    <button type="submit" className="button" onClick={(e) => onSubmit(e)}>
-      Transform
-    </button>
-  )
-}
-
-const CryptoResult = ({ result, children }) => {
-  return (
-    <p>
-      Result: <br />
-      <span id="cryptoResult" className="select-all text-mono">
-        {result}
-      </span>
-      {children}
-    </p>
   )
 }
 

@@ -5,12 +5,13 @@
  * See: https://www.gatsbyjs.com/docs/use-static-query/
  */
 
+// eslint-disable-next-line no-use-before-define
 import React, { useContext } from 'react'
 import { Helmet } from 'react-helmet'
 
 import { ThemeContext } from '../context/ThemeContext'
 
-function SEO({ description = ``, meta = [], title }) {
+export const SEO: React.FC = () => {
   const { currentTheme } = useContext(ThemeContext)
 
   return (
@@ -22,14 +23,15 @@ function SEO({ description = ``, meta = [], title }) {
       title="tosu.be"
       meta={[
         {
-          name: `description`,
-          content: `Useful tools like bank account generator, SHA-256 encoder, Base64 encoder/decoder and racing!`,
+          name: 'description',
+          content:
+            'Useful tools like bank account generator, SHA-256 encoder, Base64 encoder/decoder and racing!',
         },
         {
-          property: `og:title`,
-          content: `tosu.be`,
+          property: 'og:title',
+          content: 'tosu.be',
         },
-      ].concat(meta)}
+      ]}
     />
   )
 }
