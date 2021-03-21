@@ -23,9 +23,13 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'default')
+  const windowGlobal = typeof window !== 'undefined' && window
+  const [theme, setTheme] = useState(
+    windowGlobal ? localStorage.getItem('theme') : 'default'
+  )
 
   const handleClick = (value: string) => {
+    localStorage.setItem('theme', value)
     setTheme(value)
   }
 
