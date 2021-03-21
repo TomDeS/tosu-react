@@ -5,7 +5,7 @@ import Base64 from 'crypto-js/enc-base64'
 import ENC from 'crypto-js/enc-utf8'
 import Hex from 'crypto-js/enc-hex'
 
-import CopyButton from '../../utilities/CopyButton'
+import CopyButton from '@/utilities/CopyButton'
 
 interface CryptoOptionsProps {
   onChangeMethod(e: string): any

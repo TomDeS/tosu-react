@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-use-before-define
 import React from 'react'
 import { Link } from 'gatsby'
-import ThemeToggler from '../utilities/ThemeToggler'
+import ThemeToggler from '@/utilities/ThemeToggler'
 
 interface HeaderProps {
   siteTitle: string

@@ -9,7 +9,7 @@
 import React, { useContext } from 'react'
 import { Helmet } from 'react-helmet'
 
-import { ThemeContext } from '../context/ThemeContext'
+import { ThemeContext } from '@/context/ThemeContext'
 
 export const SEO: React.FC = () => {
   const { currentTheme } = useContext(ThemeContext)
