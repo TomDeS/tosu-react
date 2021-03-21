@@ -1,6 +1,4 @@
-import React, { useContext } from 'react'
-
-import { ThemeContext } from '@/context/ThemeContext'
+import React, { useState } from 'react'
 
 interface ThemeButtonProps {
   name: string
@@ -49,32 +47,24 @@ const ThemeButton: React.FC<ThemeButtonProps> = (props) => {
   )
 }
 
-const ThemeToggler: React.FC = () => {
-  const { currentTheme, setCurrentTheme } = useContext(ThemeContext)
-
-  const handleClick = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentTheme(e)
-  }
-
-  return (
-    <div className="theme-toggler">
-      <ThemeButton
-        name="default"
-        currentTheme={currentTheme}
-        handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
-      />
-      <ThemeButton
-        name="Jellefy"
-        currentTheme={currentTheme}
-        handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
-      />
-      <ThemeButton
-        name="Jonify"
-        currentTheme={currentTheme}
-        handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
-      />
-    </div>
-  )
-}
+const ThemeToggler: React.FC = ({ theme, handleClick }) => (
+  <div className="theme-toggler">
+    <ThemeButton
+      name="default"
+      currentTheme={theme}
+      handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
+    />
+    <ThemeButton
+      name="Jellefy"
+      currentTheme={theme}
+      handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
+    />
+    <ThemeButton
+      name="Jonify"
+      currentTheme={theme}
+      handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
+    />
+  </div>
+)
 
 export default ThemeToggler
