@@ -7,8 +7,8 @@ const MIN_DURATION = 0
 const DEFAULT_DURATION = 15
 const MAX_DURATION = 1800
 const RANDOM_STEPS = 1000
-const COUNTER_STEPS = 100
-const DURATION_FACTOR = 2
+const MILLISECONDS = 1000
+const DURATION_FACTOR = 10
 
 interface RacersProps {
   name?: string
@@ -108,24 +108,29 @@ const RacerDeleteButton: React.FC<RacerDeleteButtonProps> = ({
 
 const RacerScore: React.FC<RacerScoreProps> = ({ counter, duration }) => {
   const [score, setScore] = useState(0)
-  const [completion, setCompletion] = useState(0)
-  const maxWidth = (parseInt(duration, 10) * RANDOM_STEPS) / 100
+  const totalTicks = parseInt(duration, 10) - 1
 
   useEffect(() => {
-    const random = randomNumber(score, score + RANDOM_STEPS)
-    setScore(random)
+    let random = Math.random()
 
-    const percentageOfCompletion = score / maxWidth
-    setCompletion(percentageOfCompletion)
+    // first half a lesser difference
+    if (counter < totalTicks / 2) {
+      random = (random + 1) / 2
+    }
+    random = (random * 100) / totalTicks + score
+
+    if (random > 100) {
+      random = 100
+    }
+
+    setScore(random)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [counter])
 
   return (
-    <div className="track">
-      <div className="track--wrapper" style={{ width: `${completion}%` }}>
-        <div className="track--progress" />
-        <div className="track--cat" />
-      </div>
+    <div className="track--wrapper" style={{ width: `${score}%` }}>
+      <div className="track--progress" />
+      <div className="track--cat" />
     </div>
   )
 }
@@ -335,8 +340,8 @@ export const Race: React.FC = () => {
   // Trigger the counter
   useEffect(() => {
     if (started) {
-      if (counter < totalDuration) {
-        setTimeout(() => setCounter(counter + 1), COUNTER_STEPS)
+      if (counter <= totalDuration) {
+        setTimeout(() => setCounter(counter + 1), 100)
         // Loop sound
         if (!isPlaying && sound) {
           play()
