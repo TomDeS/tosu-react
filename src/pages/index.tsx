@@ -10,30 +10,24 @@ const IndexPage: React.FC = () => (
   <Layout>
     <div className="container">
       <Section title="Bank account number" id="bank">
-        <div className="columns">
-          <div className="column">
-            <p>
-              Here are randomly generated valid bank account numbers. The Dutch
-              bank account number (NL) has the bank code of an existing bank
-              <sup>*</sup>. For Belgium, the bank code is a random number and
-              may or may not match an existing bank. All generated bank accounts
-              should pass most tests. If a invalid bank account number was
-              generated, please copy it and log{' '}
-              <a href="https://github.com/TomDeS/tosu-react/issues">an issue</a>
-              .
-            </p>
-            <p>
-              <small>
-                <sup>*</sup> As the 11-test isn&apos;t required anymore for new
-                NL-bank accounts, this check is not included.
-              </small>
-            </p>
-          </div>
-          <div className="column">
-            <p>Generated bank account numbers:</p>
-            <BankAccount codes={['BE', 'NL']} />
-          </div>
-        </div>
+        <p>
+          Here are randomly generated valid bank account numbers. The Dutch bank
+          account number (NL) has the bank code of an existing bank
+          <sup>*</sup>. For Belgium, the bank code is a random number and may or
+          may not match an existing bank. All generated bank accounts should
+          pass most tests. If a invalid bank account number was generated,
+          please copy it and log{' '}
+          <a href="https://github.com/TomDeS/tosu-react/issues">an issue</a>.
+        </p>
+        <p>
+          <small>
+            <sup>*</sup> As the 11-test isn&apos;t required anymore for new
+            NL-bank accounts, this check is not included.
+          </small>
+        </p>
+
+        <p>Here you go, these bank account numbers are randomly generated:</p>
+        <BankAccount codes={['BE', 'NL']} />
       </Section>
 
       <Section title="Cryptography" id="crypto">
