@@ -1,4 +1,4 @@
-import React from "react"
+import React from 'react'
 
 interface SectionProps {
   title: string
@@ -7,25 +7,18 @@ interface SectionProps {
   id?: string
 }
 
-export const Section = ({ title, children, footer, id }: SectionProps) => {
-  return (
-    <section id={id}>
-      <h2
-        dangerouslySetInnerHTML={{
-          __html: title,
-        }}
-      ></h2>
+export const Section: React.FC<SectionProps> = ({
+  title,
+  children,
+  footer,
+  id,
+}) => (
+  <section id={id}>
+    <h2>{title}</h2>
 
-      <div className="wrapper">{children}</div>
-      {footer && (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: footer,
-          }}
-        ></div>
-      )}
-    </section>
-  )
-}
+    <div className="wrapper">{children}</div>
+    {footer && <div>{footer}</div>}
+  </section>
+)
 
 export default Section

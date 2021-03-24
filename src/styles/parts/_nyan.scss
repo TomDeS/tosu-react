@@ -3,6 +3,7 @@
   background-color: rgb(0, 51, 102);
   padding: 2rem;
   margin-top: 1rem;
+  overflow-x: hidden;
 }
 
 .race {
@@ -22,6 +23,16 @@
   }
 }
 
+.list--racers {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.track--wrapper {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 3rem;
+}
+
 .track--progress {
   display: inline-block;
   height: 1.5rem;
@@ -34,9 +45,8 @@
       rgba(101, 49, 255, 1) 0 100%
     )
     0 0/100% 200%;
-  width: 0%;
+  //width: 100%;
   animation: y 5s linear infinite;
-  transition: width 5s;
 
   &::after {
     content: '';

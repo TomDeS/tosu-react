@@ -1,3 +1,6 @@
+// Make sure we can use the @ notation
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
+
 /**
  *
  * Gatsby v3 uses webpack v5. Previous versions used to include polyfills for
@@ -11,6 +14,7 @@
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
     resolve: {
+      plugins: [new TsconfigPathsPlugin()],
       fallback: {
         crypto: false,
       },
