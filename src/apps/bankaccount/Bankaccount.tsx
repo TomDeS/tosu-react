@@ -18,7 +18,7 @@ function getBicList(country: string): string[] {
   // Array source: https://www.betaalvereniging.nl/en/focus/giro-based-and-online-payments/bank-identifier-code-bic-for-sepa-transactions/
 
   const bics: string[] = bicValues.reduce((codes: any, currentValue) => {
-    if (currentValue.countryCode === country.toString().toUpperCase()) {
+    if (currentValue.countryCode === country.country.toString().toUpperCase()) {
       codes.push(currentValue.BIC)
     }
     return codes
@@ -29,11 +29,15 @@ function getBicList(country: string): string[] {
 }
 
 function getRandomBic(country: string): string {
+  let bic = ''
   const bics: string[] = getBicList(country)
 
-  const bic: string = bics.length
-    ? bics[[randomNumber(0, bics.length - 1)]]
-    : randomNumber(0, 999).toString().padStart(3, '0')
+  if (bics.length > 0) {
+    const rndm = randomNumber(0, bics.length - 1)
+    bic = bics[rndm]
+  } else {
+    bic = randomNumber(0, 999).toString().padStart(3, '0')
+  }
 
   return bic
 }
