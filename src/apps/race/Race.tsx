@@ -111,7 +111,7 @@ const RacerScore: React.FC<RacerScoreProps> = ({ counter, duration }) => {
   const totalTicks = parseInt(duration, 10) - 1
 
   useEffect(() => {
-    let random = Math.random()
+    let random = randomNumber(0.3, 0.99, false)
 
     // first half a lesser difference
     if (counter < totalTicks / 2) {

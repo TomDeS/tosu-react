@@ -1,3 +1,13 @@
-export default function randomNumber(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1) + min)
+export default function randomNumber(
+  min: number,
+  max: number,
+  round = true
+): number {
+  let rndm = Math.random() * (max - min + 1) + min
+
+  if (round) {
+    rndm = Math.floor(rndm)
+  }
+
+  return rndm
 }
