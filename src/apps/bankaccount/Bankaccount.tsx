@@ -13,7 +13,7 @@ interface AccountWrapperProps {
   children: React.ReactNode
 }
 
-function getBicList(country: string): string[] {
+function getBicList(country: any): string[] {
   // Loop through the data and if we have a match, take those.
   // Array source: https://www.betaalvereniging.nl/en/focus/giro-based-and-online-payments/bank-identifier-code-bic-for-sepa-transactions/
 
@@ -184,6 +184,14 @@ export const BankAccount: React.FC<BankAccountProps> = ({ codes }) => {
   }
   return (
     <>
+      <ul className="list-none">
+        {codes &&
+          codes.map((country: string) => (
+            <AccountWrapper key={country} country={country}>
+              <CopyButton data={country} />
+            </AccountWrapper>
+          ))}
+      </ul>
       <button
         className="button__reset icon"
         aria-label="Refresh"
@@ -191,6 +199,7 @@ export const BankAccount: React.FC<BankAccountProps> = ({ codes }) => {
         onClick={onSubmit}
         type="button"
       >
+        Generate antoher set
         <svg
           xmlns="http://www.w3.org/2000/svg"
           enableBackground="new 0 0 24 24"
@@ -210,14 +219,6 @@ export const BankAccount: React.FC<BankAccountProps> = ({ codes }) => {
           </g>
         </svg>
       </button>
-      <ul className="list-none">
-        {codes &&
-          codes.map((country: string) => (
-            <AccountWrapper key={country} country={country}>
-              <CopyButton data={country} />
-            </AccountWrapper>
-          ))}
-      </ul>
     </>
   )
 }
