@@ -6,9 +6,8 @@ import nyan from '@/sound/nyan.mp3'
 const MIN_DURATION = 0
 const DEFAULT_DURATION = 15
 const MAX_DURATION = 1800
-const RANDOM_STEPS = 1000
-const MILLISECONDS = 1000
-const DURATION_FACTOR = 10
+const MILLISECONDS = 10
+const DURATION_FACTOR = 100
 
 interface RacersProps {
   name?: string
@@ -19,6 +18,7 @@ interface RacersProps {
 interface RaceCanvasProps {
   children: React.ReactNode
   started: boolean
+  ended: boolean
 }
 
 interface RacerProps {
@@ -29,6 +29,7 @@ interface RacerProps {
 interface RacerDeleteButtonProps {
   id: number
   deleteRacer(id: number): number
+  isDisabled: boolean
 }
 interface RacerScoreProps {
   counter: number
@@ -38,6 +39,7 @@ interface RacerScoreProps {
 interface RacerInputProps {
   racer: string
   onChangeRacer(e: string): any
+  isDisabled: boolean
 }
 
 interface AddRacerButtonProps {
@@ -64,16 +66,30 @@ interface EnableSoundProps {
 interface SetDurationProps {
   duration: string
   onDurationChange(e: string): any
+  isDisabled: boolean
 }
 
-const RaceCanvas: React.FC<RaceCanvasProps> = ({ children, started }) => (
-  <>
-    <div className={`race-canvas ${started ? 'race-started' : ''}`}>
-      {children}
-    </div>
-  </>
-)
+const RaceCanvas: React.FC<RaceCanvasProps> = ({
+  children,
+  started,
+  ended,
+}) => {
+  let classes = ''
 
+  if (started) {
+    classes = 'race__started full-width'
+  }
+
+  if (ended) {
+    classes = 'race__ended full-width'
+  }
+
+  return (
+    <>
+      <div className={`race--canvas ${classes}`}>{children}</div>
+    </>
+  )
+}
 const Racer: React.FC<RacerProps> = ({ children, name }) => (
   <div className="racer--details">
     {name}
@@ -84,6 +100,7 @@ const Racer: React.FC<RacerProps> = ({ children, name }) => (
 const RacerDeleteButton: React.FC<RacerDeleteButtonProps> = ({
   id,
   deleteRacer,
+  isDisabled,
 }) => (
   <button
     className="button__reset icon"
@@ -91,6 +108,7 @@ const RacerDeleteButton: React.FC<RacerDeleteButtonProps> = ({
     title="Remove participant"
     onClick={() => deleteRacer(id)}
     type="button"
+    disabled={isDisabled}
   >
     <svg
       className="w-4 h-4"
@@ -108,16 +126,18 @@ const RacerDeleteButton: React.FC<RacerDeleteButtonProps> = ({
 
 const RacerScore: React.FC<RacerScoreProps> = ({ counter, duration }) => {
   const [score, setScore] = useState(0)
-  const totalTicks = parseInt(duration, 10) - 1
+  const totalTicks = parseInt(duration, 10)
 
   useEffect(() => {
-    let random = randomNumber(0.3, 0.99, false)
+    let random = randomNumber(20, 100, false) / 1125
 
     // first half a lesser difference
     if (counter < totalTicks / 2) {
-      random = (random + 1) / 2
+      random /= 2
     }
-    random = (random * 100) / totalTicks + score
+    //    random = (random * 100) / totalTicks + score
+
+    random += score
 
     if (random > 100) {
       random = 100
@@ -130,12 +150,16 @@ const RacerScore: React.FC<RacerScoreProps> = ({ counter, duration }) => {
   return (
     <div className="track--wrapper" style={{ width: `${score}%` }}>
       <div className="track--progress" />
-      <div className="track--cat" />
+      <div className="track--cat" title={`progress: ${score}%`} />
     </div>
   )
 }
 
-const RacerInput: React.FC<RacerInputProps> = ({ racer, onChangeRacer }) => (
+const RacerInput: React.FC<RacerInputProps> = ({
+  racer,
+  onChangeRacer,
+  isDisabled,
+}) => (
   <input
     type="text"
     name="racer"
@@ -144,6 +168,7 @@ const RacerInput: React.FC<RacerInputProps> = ({ racer, onChangeRacer }) => (
     onChange={(e) => onChangeRacer(e.target.value)}
     className="input"
     placeholder="Racer name"
+    disabled={isDisabled}
   />
 )
 
@@ -250,6 +275,7 @@ const EnableSound: React.FC<EnableSoundProps> = ({ sound, toggleSound }) => (
 const SetDuration: React.FC<SetDurationProps> = ({
   duration,
   onDurationChange,
+  isDisabled,
 }) => (
   <>
     <div className="row">
@@ -266,6 +292,7 @@ const SetDuration: React.FC<SetDurationProps> = ({
         required
         value={duration}
         onChange={(e) => onDurationChange(e.target.value)}
+        disabled={isDisabled}
       />
     </div>
   </>
@@ -279,6 +306,7 @@ export const Race: React.FC = () => {
   const [sound, setSound] = useState<boolean>(false)
   const [duration, setDuration] = useState<string>('15')
   const [counter, setCounter] = useState<number>(-1)
+  const [ended, setEnded] = useState<boolean>(false)
 
   const totalDuration: number = parseInt(duration, 10) * DURATION_FACTOR
 
@@ -341,13 +369,14 @@ export const Race: React.FC = () => {
   useEffect(() => {
     if (started) {
       if (counter <= totalDuration) {
-        setTimeout(() => setCounter(counter + 1), 100)
+        setTimeout(() => setCounter(counter + 1), MILLISECONDS)
         // Loop sound
         if (!isPlaying && sound) {
           play()
         }
       } else {
         stop()
+        setEnded(true)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -382,56 +411,57 @@ export const Race: React.FC = () => {
   }
 
   return (
-    <section>
-      <div className="wrapper">
-        <form>
-          <div className="row">
-            <RacerInput
-              racer={currentRacer}
-              onChangeRacer={(name: string) => changeCurrentRacer(name)}
-            />
-            <AddRacerButton
-              isDisabled={!!(started || !currentRacer.length)}
-              addRacer={(e: React.ChangeEvent<HTMLInputElement>) => addRacer(e)}
-            />
-            <StartRaceButton
-              isDisabled={!!(started || racers.length === 0)}
-              startRace={startRace}
-            />
-          </div>
-          <RaceSettings duration={duration} sound={sound}>
-            <EnableSound sound={sound} toggleSound={toggleSound} />
-            <SetDuration
-              duration={duration}
-              onDurationChange={(seconds: string) => changeDuration(seconds)}
-            />
-          </RaceSettings>
-        </form>
+    <>
+      <form>
+        <div className="row">
+          <RacerInput
+            racer={currentRacer}
+            onChangeRacer={(name: string) => changeCurrentRacer(name)}
+            isDisabled={!!started}
+          />
+          <AddRacerButton
+            isDisabled={!!(started || !currentRacer.length)}
+            addRacer={(e: React.ChangeEvent<HTMLInputElement>) => addRacer(e)}
+          />
+          <StartRaceButton
+            isDisabled={!!(started || racers.length === 0)}
+            startRace={startRace}
+          />
+        </div>
+        <RaceSettings duration={duration} sound={sound}>
+          <EnableSound sound={sound} toggleSound={toggleSound} />
+          <SetDuration
+            duration={duration}
+            onDurationChange={(seconds: string) => changeDuration(seconds)}
+            isDisabled={!!started}
+          />
+        </RaceSettings>
+      </form>
 
-        <RaceCanvas started={started}>
-          <ul className="list-none list--racers">
-            {racers.map((racer) =>
-              racer.deleted ? null : (
-                <li className="racer" key={racer.id}>
-                  <Racer name={racer.name}>
-                    <RacerDeleteButton
-                      id={racer.id}
-                      deleteRacer={(id: number) => deleteRacer(id)}
-                    />
-                  </Racer>
-                  {started && (
-                    <RacerScore
-                      counter={counter}
-                      duration={totalDuration.toString()}
-                    />
-                  )}
-                </li>
-              )
-            )}
-          </ul>
-        </RaceCanvas>
-      </div>
-    </section>
+      <RaceCanvas started={started} ended={ended}>
+        <ul className="list-none list--racers">
+          {racers.map((racer) =>
+            racer.deleted ? null : (
+              <li className="racer" key={racer.id}>
+                <Racer name={racer.name || ''}>
+                  <RacerDeleteButton
+                    id={racer.id || -1}
+                    deleteRacer={(id: number) => deleteRacer(id)}
+                    isDisabled={!!started}
+                  />
+                </Racer>
+                {started && (
+                  <RacerScore
+                    counter={counter}
+                    duration={totalDuration.toString()}
+                  />
+                )}
+              </li>
+            )
+          )}
+        </ul>
+      </RaceCanvas>
+    </>
   )
 }
 

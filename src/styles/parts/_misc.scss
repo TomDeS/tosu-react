@@ -60,7 +60,7 @@ summary {
   }
 
   &:before {
-    content: "";
+    content: '';
     border-width: 0.4rem;
     border-style: solid;
     border-color: transparent transparent transparent var(--text-main);
@@ -142,4 +142,14 @@ footer {
   padding-top: 0.625rem;
   color: var(--text-muted);
   margin-top: 4rem;
+}
+
+.full-width {
+  width: 100vw!important;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  padding: 3rem;
 }

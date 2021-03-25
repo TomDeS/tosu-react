@@ -134,6 +134,7 @@ export const Crypto: React.FC = () => {
         }
         }
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error)
         result = 'Something went wrong. Are you sure this is a valid value?'
       }
@@ -143,36 +144,32 @@ export const Crypto: React.FC = () => {
   }
 
   return (
-    <section>
-      <div className="wrapper">
-        <form>
-          <CryptoOptions
-            onChangeMethod={(name: string) => changeMethod(name)}
-          />
-          <CryptoText
-            input={cryptoText}
-            onChangeInput={(input: string) => changeInput(input)}
-          />
-          <SubmitCrypto
-            onSubmit={(e: React.ChangeEvent<HTMLInputElement>) => onSubmit(e)}
-          />
-        </form>
+    <>
+      <form>
+        <CryptoOptions onChangeMethod={(name: string) => changeMethod(name)} />
+        <CryptoText
+          input={cryptoText}
+          onChangeInput={(input: string) => changeInput(input)}
+        />
+        <SubmitCrypto
+          onSubmit={(e: React.ChangeEvent<HTMLInputElement>) => onSubmit(e)}
+        />
+      </form>
 
-        <p>
-          Result: <br />
-          {!cryptoResult && (
-            <span id="cryptoResult" className="select-all text-mono">
-              Just waiting for you to enter data and press the button...
-            </span>
-          )}
-          {cryptoResult && (
-            <CryptoResult result={cryptoResult}>
-              <CopyButton data="cryptoResult" />
-            </CryptoResult>
-          )}
-        </p>
-      </div>
-    </section>
+      <p>
+        Result: <br />
+        {!cryptoResult && (
+          <span id="cryptoResult" className="select-all text-mono">
+            Just waiting for you to enter data and press the button...
+          </span>
+        )}
+        {cryptoResult && (
+          <CryptoResult result={cryptoResult}>
+            <CopyButton data="cryptoResult" />
+          </CryptoResult>
+        )}
+      </p>
+    </>
   )
 }
 
