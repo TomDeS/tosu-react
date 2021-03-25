@@ -1,9 +1,12 @@
-.race-canvas {
+.race--canvas {
+  width: 100%;
   min-height: 3rem;
   background-color: rgb(0, 51, 102);
-  padding: 2rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
   margin-top: 1rem;
   overflow-x: hidden;
+  transition: width 0.3s linear;
 }
 
 .race {
@@ -17,6 +20,9 @@
 }
 
 .racer {
+  max-width: 90%;
+  margin: 0 auto;
+  padding-left: 1rem;
   color: var(--text-contrast);
   .icon svg {
     fill: var(--text-contrast);
@@ -25,12 +31,18 @@
 
 .list--racers {
   overflow-x: auto;
-  max-width: 100%;
 }
 
 .track--wrapper {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 3rem;
+}
+
+.race__ended {
+  .track--progress,
+  .track--cat {
+    animation-play-state: paused;
+  }
 }
 
 .track--progress {
@@ -45,7 +57,6 @@
       rgba(101, 49, 255, 1) 0 100%
     )
     0 0/100% 200%;
-  //width: 100%;
   animation: y 5s linear infinite;
 
   &::after {

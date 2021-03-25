@@ -16,7 +16,7 @@ export const Section: React.FC<SectionProps> = ({
   <section id={id}>
     <h2>{title}</h2>
 
-    <div className="wrapper">{children}</div>
+    {children}
     {footer && <div>{footer}</div>}
   </section>
 )
