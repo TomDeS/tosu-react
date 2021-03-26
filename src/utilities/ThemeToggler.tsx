@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 interface ThemeButtonProps {
   name: string
@@ -6,10 +6,16 @@ interface ThemeButtonProps {
   handleClick: any
 }
 
+interface ThemeTogglerProps {
+  theme: string
+  handleClick: any
+}
+
 const ThemeButton: React.FC<ThemeButtonProps> = (props) => {
   const { name } = props
   const { currentTheme } = props
   const lowerName = name.toLowerCase()
+  console.debug('ThemeButton ', currentTheme)
 
   let icon = ''
   let styles = ''
@@ -29,6 +35,7 @@ const ThemeButton: React.FC<ThemeButtonProps> = (props) => {
   }
 
   const handleClick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.debug('ThemeButton handle')
     e.preventDefault()
     props.handleClick(e.target.value)
   }
@@ -47,24 +54,28 @@ const ThemeButton: React.FC<ThemeButtonProps> = (props) => {
   )
 }
 
-const ThemeToggler: React.FC = ({ theme, handleClick }) => (
-  <div className="theme-toggler">
-    <ThemeButton
-      name="default"
-      currentTheme={theme}
-      handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
-    />
-    <ThemeButton
-      name="Jellefy"
-      currentTheme={theme}
-      handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
-    />
-    <ThemeButton
-      name="Jonify"
-      currentTheme={theme}
-      handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
-    />
-  </div>
-)
+const ThemeToggler: React.FC<ThemeTogglerProps> = ({ theme, handleClick }) => {
+  console.debug('ThemeToggler ', theme)
+
+  return (
+    <div className="theme-toggler">
+      <ThemeButton
+        name="default"
+        currentTheme={theme}
+        handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
+      />
+      <ThemeButton
+        name="Jellefy"
+        currentTheme={theme}
+        handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
+      />
+      <ThemeButton
+        name="Jonify"
+        currentTheme={theme}
+        handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
+      />
+    </div>
+  )
+}
 
 export default ThemeToggler

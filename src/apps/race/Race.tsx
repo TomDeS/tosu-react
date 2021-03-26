@@ -4,15 +4,15 @@ import randomNumber from '@/utilities/random'
 import nyan from '@/sound/nyan.mp3'
 
 const MIN_DURATION = 0
-const DEFAULT_DURATION = 15
+const DEFAULT_DURATION = 5
 const MAX_DURATION = 1800
-const MILLISECONDS = 10
-const DURATION_FACTOR = 100
 
 interface RacersProps {
   name?: string
   id?: number
   deleted?: boolean
+  score: number
+  cubicBezier: number[]
 }
 
 interface RaceCanvasProps {
@@ -24,6 +24,7 @@ interface RaceCanvasProps {
 interface RacerProps {
   children: React.ReactNode
   name: string
+  score: number
 }
 
 interface RacerDeleteButtonProps {
@@ -32,8 +33,9 @@ interface RacerDeleteButtonProps {
   isDisabled: boolean
 }
 interface RacerScoreProps {
-  counter: number
-  duration: string // we get it as a value, making it a string
+  score: number
+  cubicBezier: number[]
+  duration: string
 }
 
 interface RacerInputProps {
@@ -77,22 +79,22 @@ const RaceCanvas: React.FC<RaceCanvasProps> = ({
   let classes = ''
 
   if (started) {
-    classes = 'race__started full-width'
+    classes = 'race__started'
   }
 
   if (ended) {
-    classes = 'race__ended full-width'
+    classes = 'race__ended'
   }
 
   return (
     <>
-      <div className={`race--canvas ${classes}`}>{children}</div>
+      <div className={`race--canvas  full-width ${classes}`}>{children}</div>
     </>
   )
 }
-const Racer: React.FC<RacerProps> = ({ children, name }) => (
+const Racer: React.FC<RacerProps> = ({ children, name, score }) => (
   <div className="racer--details">
-    {name}
+    {name} {score > 0 ? `${score}%` : ''}
     {children}
   </div>
 )
@@ -124,31 +126,20 @@ const RacerDeleteButton: React.FC<RacerDeleteButtonProps> = ({
   </button>
 )
 
-const RacerScore: React.FC<RacerScoreProps> = ({ counter, duration }) => {
-  const [score, setScore] = useState(0)
-  const totalTicks = parseInt(duration, 10)
+const RacerScore: React.FC<RacerScoreProps> = ({
+  score,
+  cubicBezier,
+  duration,
+}) => {
+  const cb = cubicBezier.join(', ')
 
-  useEffect(() => {
-    let random = randomNumber(20, 100, false) / 1125
-
-    // first half a lesser difference
-    if (counter < totalTicks / 2) {
-      random /= 2
-    }
-    //    random = (random * 100) / totalTicks + score
-
-    random += score
-
-    if (random > 100) {
-      random = 100
-    }
-
-    setScore(random)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [counter])
+  const style = {
+    width: `${score}%`,
+    transition: `width ${duration}s cubic-bezier(${cb})`,
+  }
 
   return (
-    <div className="track--wrapper" style={{ width: `${score}%` }}>
+    <div className="track--wrapper" style={style}>
       <div className="track--progress" />
       <div className="track--cat" title={`progress: ${score}%`} />
     </div>
@@ -304,11 +295,11 @@ export const Race: React.FC = () => {
   const [racers, setRacers] = useState<RacersProps[]>([])
   const [started, setStarted] = useState<boolean>(false)
   const [sound, setSound] = useState<boolean>(false)
-  const [duration, setDuration] = useState<string>('15')
-  const [counter, setCounter] = useState<number>(-1)
+  const [duration, setDuration] = useState<string>('5')
+  const [counter, setCounter] = useState<number>(0)
   const [ended, setEnded] = useState<boolean>(false)
 
-  const totalDuration: number = parseInt(duration, 10) * DURATION_FACTOR
+  const totalDuration: number = parseInt(duration, 10)
 
   const changeCurrentRacer = (name: string) => {
     setCurrentRacer(name)
@@ -319,9 +310,23 @@ export const Race: React.FC = () => {
     const newRacer = currentRacer
     const id: any[] = racers?.length
 
+    // set score
+    const racerScore = randomNumber(50, 100)
+    const cube = Array.from(Array(4)).map(
+      () =>
+        Math.round((randomNumber(1, 9, false) / 10 + Number.EPSILON) * 100) /
+        100
+    )
+
     setRacers((prevRacers: any[]) => [
       ...prevRacers,
-      { name: newRacer, id, deleted: false },
+      {
+        name: newRacer,
+        id,
+        deleted: false,
+        score: racerScore,
+        cubicBezier: cube,
+      },
     ])
 
     setCurrentRacer('')
@@ -361,7 +366,7 @@ export const Race: React.FC = () => {
   // Monitor if started. This is a trigger for the counter
   useEffect(() => {
     if (started) {
-      setCounter(0)
+      setCounter(1)
     }
   }, [started])
 
@@ -369,7 +374,8 @@ export const Race: React.FC = () => {
   useEffect(() => {
     if (started) {
       if (counter <= totalDuration) {
-        setTimeout(() => setCounter(counter + 1), MILLISECONDS)
+        setTimeout(() => setCounter(counter + 1), 1000)
+
         // Loop sound
         if (!isPlaying && sound) {
           play()
@@ -443,19 +449,18 @@ export const Race: React.FC = () => {
           {racers.map((racer) =>
             racer.deleted ? null : (
               <li className="racer" key={racer.id}>
-                <Racer name={racer.name || ''}>
+                <Racer name={racer.name || ''} score={ended ? racer.score : 0}>
                   <RacerDeleteButton
                     id={racer.id || -1}
                     deleteRacer={(id: number) => deleteRacer(id)}
                     isDisabled={!!started}
                   />
                 </Racer>
-                {started && (
-                  <RacerScore
-                    counter={counter}
-                    duration={totalDuration.toString()}
-                  />
-                )}
+                <RacerScore
+                  score={started ? racer.score : 0}
+                  cubicBezier={racer.cubicBezier}
+                  duration={duration}
+                />
               </li>
             )
           )}

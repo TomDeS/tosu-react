@@ -6,7 +6,6 @@
   padding-bottom: 2rem;
   margin-top: 1rem;
   overflow-x: hidden;
-  transition: width 0.3s linear;
 }
 
 .race {
@@ -21,6 +20,7 @@
 
 .racer {
   max-width: 90%;
+  width: 100%;
   margin: 0 auto;
   padding-left: 1rem;
   color: var(--text-contrast);
@@ -36,6 +36,7 @@
 .track--wrapper {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 3rem;
+  width: 0%;
 }
 
 .race__ended {
@@ -94,8 +95,9 @@
   background-repeat: no-repeat;
   background-position: left center;
   background-size: contain;
-  animation: cat 0.3s linear infinite;
+  animation: cat 0.3s linear infinite ;
 }
+
 
 @keyframes cat {
   0% {
