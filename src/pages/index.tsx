@@ -9,6 +9,18 @@ import BankAccount from '@/apps/bankaccount/Bankaccount'
 const IndexPage: React.FC = () => (
   <Layout>
     <div className="container">
+      <div className="race--canvas race__started full-width">
+        <ul className="list-none list--racers">
+          <li className="racer">
+            <div className="racer--details">a</div>
+            <div className="track--wrapper">
+              <div className="track--progress" />
+              <div className="track--cat" />
+            </div>
+          </li>
+        </ul>
+      </div>
+      {/**
       <Section title="Bank account number" id="bank">
         <p>
           Here are randomly generated valid bank account numbers. The Dutch bank
@@ -33,7 +45,7 @@ const IndexPage: React.FC = () => (
       <Section title="Cryptography" id="crypto">
         <Crypto />
       </Section>
-
+*/}
       <Section title="Race" id="race">
         <p>
           Let&apos;s see who is the fastest. Add participant names in the below
