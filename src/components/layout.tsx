@@ -23,6 +23,8 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  console.debug('Layout')
+
   const windowGlobal = typeof window !== 'undefined' && window
   const [theme, setTheme] = useState(
     windowGlobal ? localStorage.getItem('theme') : 'default'
