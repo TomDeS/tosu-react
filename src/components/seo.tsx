@@ -8,12 +8,15 @@
 // eslint-disable-next-line no-use-before-define
 import React from 'react'
 import { Helmet } from 'react-helmet'
+import settings from '@/config/config'
+
+const { DEFAULT_THEME } = settings.theme
 
 interface SEOProps {
   theme: string
 }
 
-export const SEO: React.FC<SEOProps> = ({ theme }) => {
+export const SEO: React.FC<SEOProps> = ({ theme = DEFAULT_THEME }) => {
   console.debug('SEO ', theme)
   return (
     <Helmet

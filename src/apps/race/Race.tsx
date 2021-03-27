@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import useSound from 'use-sound'
+import settings from '@/config/config'
 import randomNumber from '@/utilities/random'
 import round from '@/utilities/round'
 import nyan from '@/sound/nyan.mp3'
+import { useSnackbar } from '@/hooks/useSnackbar'
+import Snackbar from '@/components/snackbar'
 
-const MIN_DURATION = 0
-const DEFAULT_DURATION = 5
-const MAX_DURATION = 1800
+const { MIN_DURATION, DEFAULT_DURATION, MAX_DURATION } = settings.race
 
 interface RacersProps {
   name?: string
@@ -303,6 +304,7 @@ export const Race: React.FC = () => {
   const [ended, setEnded] = useState<boolean>(false)
 
   const totalDuration: number = parseInt(duration, 10)
+  const { isActive, message, openSnackbar } = useSnackbar()
 
   const changeCurrentRacer = (name: string) => {
     setCurrentRacer(name)
@@ -348,6 +350,8 @@ export const Race: React.FC = () => {
       },
       []
     )
+
+    openSnackbar('Competitor eliminated')
 
     setRacers(racerList)
   }
@@ -453,7 +457,7 @@ export const Race: React.FC = () => {
               <li className="racer" key={racer.id}>
                 <Racer name={racer.name || ''} score={ended ? racer.score : 0}>
                   <RacerDeleteButton
-                    id={racer.id || -1}
+                    id={racer.id}
                     deleteRacer={(id: number) => deleteRacer(id)}
                     isDisabled={!!started}
                   />
@@ -468,6 +472,7 @@ export const Race: React.FC = () => {
           )}
         </ul>
       </RaceCanvas>
+      <Snackbar isActive={isActive} message={message} />
     </>
   )
 }
