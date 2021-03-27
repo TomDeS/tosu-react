@@ -13,7 +13,7 @@ export const Section: React.FC<SectionProps> = ({
   footer,
   id,
 }) => (
-  <section id={id}>
+  <section id={id} tabIndex={-1}>
     <h2>{title}</h2>
 
     {children}

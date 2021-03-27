@@ -54,10 +54,6 @@ summary {
   position: relative;
   cursor: pointer;
   outline: none;
-  &:hover,
-  &:focus {
-    text-decoration: underline;
-  }
 
   &:before {
     content: '';
@@ -145,11 +141,10 @@ footer {
 }
 
 .full-width {
-  width: 100vw!important;
+  width: 100vw !important;
   position: relative;
   left: 50%;
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
-  padding: 3rem;
 }

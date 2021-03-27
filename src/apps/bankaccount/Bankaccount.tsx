@@ -193,13 +193,12 @@ export const BankAccount: React.FC<BankAccountProps> = ({ codes }) => {
           ))}
       </ul>
       <button
-        className="button"
+        className="button icon__right"
         aria-label="Refresh"
         title="Refresh"
         onClick={onSubmit}
         type="button"
       >
-        Generate antoher set
         <span className="icon">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -220,6 +219,7 @@ export const BankAccount: React.FC<BankAccountProps> = ({ codes }) => {
             </g>
           </svg>
         </span>
+        Generate antoher set
       </button>
     </>
   )
