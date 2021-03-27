@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import useSound from 'use-sound'
 import randomNumber from '@/utilities/random'
+import round from '@/utilities/round'
 import nyan from '@/sound/nyan.mp3'
 
 const MIN_DURATION = 0
@@ -93,10 +94,12 @@ const RaceCanvas: React.FC<RaceCanvasProps> = ({
   )
 }
 const Racer: React.FC<RacerProps> = ({ children, name, score }) => (
-  <div className="racer--details">
-    {name} {score > 0 ? `${score}%` : ''}
+  <>
     {children}
-  </div>
+    <span className="racer--details">
+      {name} <small>{score > 0 ? `${score}%` : ''}</small>
+    </span>
+  </>
 )
 
 const RacerDeleteButton: React.FC<RacerDeleteButtonProps> = ({
@@ -105,7 +108,7 @@ const RacerDeleteButton: React.FC<RacerDeleteButtonProps> = ({
   isDisabled,
 }) => (
   <button
-    className="button__reset icon"
+    className="button__reset icon icon__right"
     aria-label="Remove participant"
     title="Remove participant"
     onClick={() => deleteRacer(id)}
@@ -311,11 +314,10 @@ export const Race: React.FC = () => {
     const id: any[] = racers?.length
 
     // set score
-    const racerScore = randomNumber(50, 100)
-    const cube = Array.from(Array(4)).map(
-      () =>
-        Math.round((randomNumber(1, 9, false) / 10 + Number.EPSILON) * 100) /
-        100
+    const rndm = round(randomNumber(50, 100, false))
+    const racerScore = rndm > 100 ? 100 : rndm // avoid results like 100.86%
+    const cube = Array.from(Array(4)).map(() =>
+      round(randomNumber(1, 9, false) / 10)
     )
 
     setRacers((prevRacers: any[]) => [

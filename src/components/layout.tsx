@@ -36,7 +36,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   }
 
   useEffect(() => {
-    localStorage.setItem('theme', theme)
+    localStorage.setItem('theme', theme || 'default')
   }, [theme])
 
   return (
