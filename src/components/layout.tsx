@@ -14,29 +14,37 @@
 
 // eslint-disable-next-line no-use-before-define
 import React, { useState, useEffect } from 'react'
+import settings from '@/config/config'
 import Header from './header'
 import SEO from './seo'
 import Footer from './footer'
+
+const { DEFAULT_THEME } = settings.theme
 
 interface LayoutProps {
   children: React.ReactNode
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  console.debug('Layout')
+  const [theme, setTheme] = useState(() => {
+    let initialTheme = DEFAULT_THEME
 
-  const windowGlobal = typeof window !== 'undefined' && window
-  const [theme, setTheme] = useState(
-    windowGlobal ? localStorage.getItem('theme') : 'default'
-  )
+    if (typeof window !== 'undefined') {
+      if (window.localStorage.getItem('theme') !== null) {
+        initialTheme = window.localStorage.getItem('theme') || DEFAULT_THEME
+      }
+    }
+    return initialTheme
+  })
 
-  const handleClick = (value: string) => {
-    localStorage.setItem('theme', value)
-    setTheme(value)
+  const handleClick = (newTheme: string) => {
+    const val = newTheme?.toLowerCase() || DEFAULT_THEME
+    localStorage.setItem('theme', val)
+    setTheme(val)
   }
 
   useEffect(() => {
-    localStorage.setItem('theme', theme || 'default')
+    localStorage.setItem('theme', theme)
   }, [theme])
 
   return (

@@ -1,19 +1,25 @@
 import React from 'react'
+import { useSnackbar } from '@/hooks/useSnackbar'
+import Snackbar from '@/components/snackbar'
 
 interface CopyButtonProps {
   data: string
 }
 
 export const CopyButton: React.FC<CopyButtonProps> = ({ data }) => {
+  const { isActive, message, openSnackbar } = useSnackbar()
   const id = data
 
   const handleClick = () => {
-    const text =
-      document.getElementById(id)?.textContent || 'Could not copy value'
+    const text = document.getElementById(id)?.textContent || 0
+    let snackText = 'Error during copying.'
 
-    if (text) {
+    if (text !== 0) {
       navigator.clipboard.writeText(text)
+      snackText = 'Text copied!'
     }
+
+    openSnackbar(snackText)
   }
 
   return (
@@ -36,6 +42,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({ data }) => {
           <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
         </svg>
       </button>
+      <Snackbar isActive={isActive} message={message} />
     </>
   )
 }

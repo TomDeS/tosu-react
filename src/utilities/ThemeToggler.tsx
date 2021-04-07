@@ -1,4 +1,7 @@
 import React from 'react'
+import settings from '@/config/config'
+
+const { DEFAULT_THEME, LIGHT_THEME, CRAZY_IN_THE_COCONUT } = settings.theme
 
 interface ThemeButtonProps {
   name: string
@@ -12,23 +15,22 @@ interface ThemeTogglerProps {
 }
 
 const ThemeButton: React.FC<ThemeButtonProps> = (props) => {
-  const { name } = props
-  const { currentTheme } = props
-  const lowerName = name.toLowerCase()
-  console.debug('ThemeButton ', currentTheme)
+  const { name, currentTheme } = props
+  const upperName = name.toUpperCase()
+  console.debug('ThemeButton ', currentTheme, upperName)
 
   let icon = ''
   let styles = ''
   let isDisabled = false
 
-  if (lowerName === currentTheme) {
+  if (upperName === currentTheme.toUpperCase()) {
     isDisabled = true
     styles = 'button__active'
   }
 
-  if (lowerName === 'default') {
+  if (upperName === DEFAULT_THEME.toUpperCase()) {
     icon = '🌙'
-  } else if (lowerName === 'jellefy') {
+  } else if (upperName === LIGHT_THEME.toUpperCase()) {
     icon = '☀'
   } else {
     icon = '🙀'
@@ -44,7 +46,7 @@ const ThemeButton: React.FC<ThemeButtonProps> = (props) => {
     <button
       onClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
       className={styles}
-      value={lowerName}
+      value={upperName}
       disabled={isDisabled}
       type="button"
     >
@@ -60,17 +62,17 @@ const ThemeToggler: React.FC<ThemeTogglerProps> = ({ theme, handleClick }) => {
   return (
     <div className="theme-toggler">
       <ThemeButton
-        name="default"
+        name={DEFAULT_THEME}
         currentTheme={theme}
         handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
       />
       <ThemeButton
-        name="Jellefy"
+        name={LIGHT_THEME}
         currentTheme={theme}
         handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
       />
       <ThemeButton
-        name="Jonify"
+        name={CRAZY_IN_THE_COCONUT}
         currentTheme={theme}
         handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
       />

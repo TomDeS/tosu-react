@@ -1,12 +1,12 @@
 @charset 'utf-8';
-@import "normalize.css";
+@import 'normalize.css';
 
-@import "parts/variables";
-@import "parts/base";
-@import "parts/typography";
-@import "parts/forms";
-@import "parts/links";
-@import "parts/misc";;
-@import "parts/lists";
-@import "parts/nyan";
-
+@import 'parts/variables';
+@import 'parts/base';
+@import 'parts/typography';
+@import 'parts/forms';
+@import 'parts/links';
+@import 'parts/misc';
+@import 'parts/lists';
+@import 'parts/nyan';
+@import 'parts/toast';
