@@ -219,7 +219,7 @@ export const BankAccount: React.FC<BankAccountProps> = ({ codes }) => {
             </g>
           </svg>
         </span>
-        Generate antoher set
+        Generate another set
       </button>
     </>
   )
