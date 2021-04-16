@@ -1,4 +1,4 @@
-export const bicValues = [
+const bicValues = [
   {
     countryCode: 'NL',
     BIC: [
@@ -75,3 +75,5 @@ export const bicValues = [
     ],
   },
 ]
+
+export default bicValues
