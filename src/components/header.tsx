@@ -22,6 +22,9 @@ export const Header: React.FC<HeaderProps> = ({
           <a href="/#bank">Bank accounts</a>
         </li>
         <li>
+          <a href="/#vin">VIN</a>
+        </li>
+        <li>
           <a href="/#crypto">Crypto</a>
         </li>
         <li>
