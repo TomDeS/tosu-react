@@ -1,52 +1,31 @@
-import React from 'react'
-import settings from '@/config/config'
+/**
+ * Theme toggle component
+ * Vaguely based on https://electricanimals.com/articles/next-js-dark-mode-toggle
+ */
 
-const { DEFAULT_THEME, LIGHT_THEME, CRAZY_IN_THE_COCONUT } = settings.theme
+import React, { useState, useEffect } from 'react'
+import settings from '@/config/config'
 
 interface ThemeButtonProps {
   name: string
-  currentTheme: string
-  handleClick: any
-}
-
-interface ThemeTogglerProps {
-  theme: string
+  icon: string
+  activeTheme: string
   handleClick: any
 }
 
 const ThemeButton: React.FC<ThemeButtonProps> = (props) => {
-  const { name, currentTheme } = props
-  const upperName = name.toUpperCase()
-  console.debug('ThemeButton ', currentTheme, upperName)
+  const { name, icon, activeTheme } = props
 
-  let icon = ''
-  let styles = ''
-  let isDisabled = false
-
-  if (upperName === currentTheme.toUpperCase()) {
-    isDisabled = true
-    styles = 'button__active'
+  const changeTheme = (val: string) => {
+    props.handleClick(val)
   }
 
-  if (upperName === DEFAULT_THEME.toUpperCase()) {
-    icon = '🌙'
-  } else if (upperName === LIGHT_THEME.toUpperCase()) {
-    icon = '☀'
-  } else {
-    icon = '🙀'
-  }
-
-  const handleClick = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.debug('ThemeButton handle')
-    e.preventDefault()
-    props.handleClick(e.target.value)
-  }
-
+  const isDisabled = activeTheme === name
   return (
     <button
-      onClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
-      className={styles}
-      value={upperName}
+      onClick={(e: any) => changeTheme(e.target.value)}
+      className={isDisabled ? 'button__disabled' : 'button__active'}
+      value={name}
       disabled={isDisabled}
       type="button"
     >
@@ -56,26 +35,62 @@ const ThemeButton: React.FC<ThemeButtonProps> = (props) => {
   )
 }
 
-const ThemeToggler: React.FC<ThemeTogglerProps> = ({ theme, handleClick }) => {
-  console.debug('ThemeToggler ', theme)
+function checkThemeMode(): string {
+  let theme = 'default'
+
+  // Avoid Gatsby build fail over window
+  if (typeof window !== 'undefined') {
+    // If user selected a value manually, use that one
+    const savedTheme = window.localStorage.getItem('theme')
+
+    if (savedTheme && savedTheme !== undefined) {
+      theme = savedTheme
+    }
+    // Otherwise, check if user has a preference and use that value
+    else {
+      const userPrefersLight =
+        window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: light)').matches
+      if (userPrefersLight) {
+        theme = 'jellefy'
+      }
+    }
+  }
+
+  return theme
+}
+
+const ThemeToggler: React.FC = () => {
+  const [activeTheme, setActiveTheme] = useState('default')
+
+  const handleClick = (val: string) => {
+    setActiveTheme(val)
+  }
+
+  // Get theme from local storage (if available) on component (un)mount
+  useEffect(() => {
+    const pref = checkThemeMode()
+    setActiveTheme(pref)
+  }, [])
+
+  // Set the active theme and store it in local storage
+  useEffect(() => {
+    document.body.dataset.theme = activeTheme
+    window.localStorage.setItem('theme', activeTheme)
+  }, [activeTheme])
 
   return (
     <div className="theme-toggler">
-      <ThemeButton
-        name={DEFAULT_THEME}
-        currentTheme={theme}
-        handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
-      />
-      <ThemeButton
-        name={LIGHT_THEME}
-        currentTheme={theme}
-        handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
-      />
-      <ThemeButton
-        name={CRAZY_IN_THE_COCONUT}
-        currentTheme={theme}
-        handleClick={(e: React.ChangeEvent<HTMLInputElement>) => handleClick(e)}
-      />
+      {settings.theme &&
+        settings.theme.map((theme) => (
+          <ThemeButton
+            name={theme.value}
+            icon={theme.icon}
+            activeTheme={activeTheme}
+            handleClick={(e: string) => handleClick(e)}
+            key={theme.name}
+          />
+        ))}
     </div>
   )
 }

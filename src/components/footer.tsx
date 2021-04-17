@@ -21,8 +21,8 @@ export const Footer: React.FC = () => (
       <div className="row">
         <p>
           This website uses electricity and functional cookies. Actually we only
-          use local storage, to make things work offline and super-duper fast.
-          We don&apos;t track you, sorry.
+          use local storage, to remember your theme preference, make things work
+          offline and super-duper fast. We don&apos;t track you, sorry.
         </p>
       </div>
 

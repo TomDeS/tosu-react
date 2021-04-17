@@ -1,6 +1,6 @@
 $breakpoint-small: 800px;
 
-:root {
+body {
   --background-body: #202b38;
   --background: #161f27;
   --background-alt: #1a242f;
@@ -30,7 +30,7 @@ $breakpoint-small: 800px;
   --text-shadow: none;
 }
 
-.jellefy:root {
+body[data-theme='jellefy'] {
   --background-body: #f3f2f1;
   --background: #fff;
   --background-alt: #afbbb4;
@@ -60,7 +60,7 @@ $breakpoint-small: 800px;
   --text-shadow: none;
 }
 
-.jonify:root {
+body[data-theme='jonify'] {
   --background-body: linear-gradient(
     0deg,
     rgba(168, 0, 255, 1) 0%,
