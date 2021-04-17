@@ -97,7 +97,7 @@ nav {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
   @media (min-width: $breakpoint-small) {
-    grid-template-columns: 20ch minmax(0, 1fr);
+    grid-template-columns: 10ch minmax(0, 1fr);
   }
   align-items: center;
   font-weight: var(--font-weight-thick);

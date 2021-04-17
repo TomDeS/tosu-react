@@ -1,9 +1,21 @@
 const settings = {
-  theme: {
-    DEFAULT_THEME: 'default',
-    LIGHT_THEME: 'jellefy',
-    CRAZY_IN_THE_COCONUT: 'jonify',
-  },
+  theme: [
+    {
+      name: 'DEFAULT_THEME',
+      value: 'default',
+      icon: '🌙',
+    },
+    {
+      name: 'LIGHT_THEME',
+      value: 'jellefy',
+      icon: '☀',
+    },
+    {
+      name: 'CRAZY_IN_THE_COCONUT',
+      value: 'jonify',
+      icon: '🙀',
+    },
+  ],
   race: {
     MIN_DURATION: 0,
     DEFAULT_DURATION: 5,

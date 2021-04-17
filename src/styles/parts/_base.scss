@@ -9,10 +9,7 @@ html {
   word-break: break-word;
   hyphens: auto;
   overflow-x: hidden;
-  font-family: var(--font-family);
-  font-size: var(--font-size);
-  font-weight: var(--font-weight);
-  line-height: var(--line-height);
+
   &:focus-within {
     scroll-behavior: smooth;
   }
@@ -26,6 +23,10 @@ body {
   background: var(--background-body);
   text-rendering: optimizeLegibility;
   text-shadow: var(--text-shadow);
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  font-weight: var(--font-weight);
+  line-height: var(--line-height);
 }
 
 button,

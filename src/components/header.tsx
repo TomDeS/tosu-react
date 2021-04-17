@@ -5,15 +5,9 @@ import ThemeToggler from '@/utilities/ThemeToggler'
 
 interface HeaderProps {
   siteTitle: string
-  theme: string
-  handleClick(e: any): any
 }
 
-export const Header: React.FC<HeaderProps> = ({
-  siteTitle,
-  theme,
-  handleClick,
-}: HeaderProps) => (
+export const Header: React.FC<HeaderProps> = ({ siteTitle }: HeaderProps) => (
   <header>
     <nav id="navbar-main" aria-label="Primary navigation">
       <Link to="/">{siteTitle}</Link>
@@ -31,10 +25,7 @@ export const Header: React.FC<HeaderProps> = ({
           <a href="/#race">Race</a>
         </li>
         <li>
-          <ThemeToggler
-            theme={theme}
-            handleClick={(value: string) => handleClick(value)}
-          />
+          <ThemeToggler />
         </li>
       </ul>
     </nav>
