@@ -1,64 +1,76 @@
 import React, { useState } from 'react'
 
 import randomNumber from '@/utilities/random'
-import pad from '@/utilities/pad'
+
 import CopyButton from '@/utilities/CopyButton'
 import Reload from '../../images/reload.svg'
 
-function randomLetters(count: number): string {
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-  const max = alphabet.length - 1
-  let result = ''
+const generateRandomVin = (): string => {
+  const vinLength = 17
+  const positionWeights = [8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2]
+  const characterValues: any[][] = [
+    ['A', 1],
+    ['B', 2],
+    ['C', 3],
+    ['D', 4],
+    ['E', 5],
+    ['F', 6],
+    ['G', 7],
+    ['H', 8],
+    ['J', 1],
+    ['K', 2],
+    ['L', 3],
+    ['M', 4],
+    ['N', 5],
+    ['P', 7],
+    ['R', 9],
+    ['S', 2],
+    ['T', 3],
+    ['U', 4],
+    ['V', 5],
+    ['W', 6],
+    ['X', 7],
+    ['Y', 8],
+    ['Z', 9],
+    [0, 0],
+    [1, 1],
+    [2, 2],
+    [3, 3],
+    [4, 4],
+    [5, 5],
+    [6, 6],
+    [7, 7],
+    [8, 8],
+    [9, 9],
+  ]
 
-  for (let i = 0; i < count; i += 1) {
-    const rndm = randomNumber(0, max, true)
-    result += alphabet[rndm]
+  const maxRndm = characterValues.length - 1
+
+  let vinSum = 0
+
+  const result: string[] | number[] = []
+
+  for (let i = 0; i < vinLength; i += 1) {
+    const rndm = randomNumber(0, maxRndm, true)
+    const chosenCharacter = characterValues[rndm][0]
+    const characterValue: number = characterValues[rndm][1]
+    const positionWeight = positionWeights[i]
+
+    result[i] = chosenCharacter
+
+    vinSum += characterValue * positionWeight
   }
 
-  return result
-}
+  // Check the MOD, if 10, checkdigit is 'X'
+  const remainder = vinSum % 11
 
-function curDate(): string {
-  const currentDate = new Date()
+  if (remainder === 10) {
+    result[8] = 'X'
+  } else {
+    result[8] = remainder
+  }
 
-  const year = currentDate.getFullYear()
-
-  const month = pad(currentDate.getMonth(), 2, '0')
-
-  const day = pad(currentDate.getDate(), 2, '0')
-
-  const today = `${year}${month}${day}`
-
-  return today
-}
-
-function curTime(): string {
-  const currentDate = new Date()
-
-  const hour = pad(currentDate.getHours(), 2, '0')
-
-  const minutes = pad(currentDate.getMinutes(), 2, '0')
-
-  const seconds = pad(currentDate.getSeconds(), 2, '0')
-
-  const today = `${hour}${minutes}${seconds}`
-
-  return today
-}
-
-const VinValues: React.FC = (props) => {
-  const { description, vin } = props
-
-  return (
-    <li>
-      {description}
-      {': '}
-      <span id={vin} className="select-all text-mono">
-        {vin}
-      </span>
-      <CopyButton data={vin} />
-    </li>
-  )
+  return result.join('')
 }
 
 export const Vin: React.FC = () => {
@@ -68,11 +80,8 @@ export const Vin: React.FC = () => {
     e.preventDefault()
     setRefresh(!refresh)
   }
-  const date = curDate()
-  const time = curTime()
-  const letters = randomLetters(3)
 
-  const vin = letters + date + time
+  const vin = generateRandomVin()
 
   return (
     <div>
