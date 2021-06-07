@@ -6,6 +6,7 @@ import Crypto from '@/apps/crypto/Crypto'
 import Section from '@/components/Section'
 import BankAccount from '@/apps/bankaccount/Bankaccount'
 import Vin from '@/apps/vin/Vin'
+import NationalNumber from '@/apps/nationalNumber/NationalNumber'
 
 const IndexPage: React.FC = () => (
   <Layout>
@@ -42,6 +43,12 @@ const IndexPage: React.FC = () => (
         based on the current date/time.
       </p>
       <Vin />
+    </Section>
+
+    <Section title="National number" id="natNum">
+      <p>Here are some random Belgian national numbers.</p>
+      <NationalNumber gender="M" />
+      <NationalNumber gender="F" />
     </Section>
 
     <Section title="Cryptography" id="crypto">

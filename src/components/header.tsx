@@ -19,6 +19,9 @@ export const Header: React.FC<HeaderProps> = ({ siteTitle }: HeaderProps) => (
           <a href="/#vin">VIN</a>
         </li>
         <li>
+          <a href="/#vin">Nat. Nr.</a>
+        </li>
+        <li>
           <a href="/#crypto">Crypto</a>
         </li>
         <li>
