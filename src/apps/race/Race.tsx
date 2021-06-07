@@ -294,7 +294,7 @@ const SetDuration: React.FC<SetDurationProps> = ({
 )
 
 export const Race: React.FC = () => {
-  const [play, { stop, isPlaying }] = useSound(nyan)
+  const [isPlaying, setIsPlaying] = useState<boolean>(false)
   const [currentRacer, setCurrentRacer] = useState<string>('')
   const [racers, setRacers] = useState<RacersProps[]>([])
   const [started, setStarted] = useState<boolean>(false)
@@ -305,6 +305,11 @@ export const Race: React.FC = () => {
 
   const totalDuration: number = parseInt(duration, 10)
   const { isActive, message, openSnackbar } = useSnackbar()
+
+  const [playNyan, {stop}] = useSound(nyan, {
+    onplay: () => setIsPlaying(true),
+    onend: () => setIsPlaying(false),
+  })
 
   const changeCurrentRacer = (name: string) => {
     setCurrentRacer(name)
@@ -365,7 +370,7 @@ export const Race: React.FC = () => {
     setStarted(true)
 
     if (sound) {
-      play()
+      playNyan()
     }
   }
 
@@ -384,10 +389,11 @@ export const Race: React.FC = () => {
 
         // Loop sound
         if (!isPlaying && sound) {
-          play()
+          playNyan()
         }
       } else {
         stop()
+        console.log('stop playing!')
         setEnded(true)
       }
     }
@@ -401,10 +407,16 @@ export const Race: React.FC = () => {
 
   // Play/stop sound on toggle
   useEffect(() => {
+
+    console.log(started , sound , isPlaying,  counter , totalDuration)
+
     if (started && sound && !isPlaying && counter < totalDuration) {
-      play()
+      playNyan()
+      console.log('please music!')
     } else {
       stop()
+      setIsPlaying(false)
+      console.log('stop playing please!')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sound])
