@@ -306,7 +306,7 @@ export const Race: React.FC = () => {
   const totalDuration: number = parseInt(duration, 10)
   const { isActive, message, openSnackbar } = useSnackbar()
 
-  const [playNyan, {stop}] = useSound(nyan, {
+  const [playNyan, { stop }] = useSound(nyan, {
     onplay: () => setIsPlaying(true),
     onend: () => setIsPlaying(false),
   })
@@ -393,7 +393,6 @@ export const Race: React.FC = () => {
         }
       } else {
         stop()
-        console.log('stop playing!')
         setEnded(true)
       }
     }
@@ -407,16 +406,11 @@ export const Race: React.FC = () => {
 
   // Play/stop sound on toggle
   useEffect(() => {
-
-    console.log(started , sound , isPlaying,  counter , totalDuration)
-
     if (started && sound && !isPlaying && counter < totalDuration) {
       playNyan()
-      console.log('please music!')
     } else {
       stop()
       setIsPlaying(false)
-      console.log('stop playing please!')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sound])
