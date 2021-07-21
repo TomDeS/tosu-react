@@ -86,7 +86,7 @@ export const Vin: React.FC = () => {
   return (
     <div>
       <div>
-        Time based:{' '}
+        VIN:{' '}
         <span id={vin} className="select-all text-mono">
           {vin}
         </span>

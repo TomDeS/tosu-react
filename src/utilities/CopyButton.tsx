@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSnackbar } from '@/hooks/useSnackbar'
-import Snackbar from '@/components/snackbar'
+import Snackbar from '@/components/Snackbar'
 
 interface CopyButtonProps {
   data: string

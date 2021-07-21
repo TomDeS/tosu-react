@@ -1,6 +1,7 @@
 import React from 'react'
+import { Link } from 'gatsby'
 
-import Layout from '@/components/layout'
+import Layout from '@/components/Layout'
 import Race from '@/apps/race/Race'
 import Crypto from '@/apps/crypto/Crypto'
 import Section from '@/components/Section'
@@ -10,50 +11,43 @@ import NationalNumber from '@/apps/nationalNumber/NationalNumber'
 
 const IndexPage: React.FC = () => (
   <Layout>
-    <Section title="Bank account number" id="bank">
-      <p>
-        Here are randomly generated valid bank account numbers. The Dutch bank
-        account number (NL) has the bank code of an existing bank
-        <sup id="a1">
-          <a href="#f1">[1]</a>
-        </sup>
-        . For Belgium, the bank code is a random number and may or may not match
-        an existing bank. All generated bank accounts should pass most tests. If
-        a invalid bank account number was generated, please copy it and log{' '}
-        <a href="https://github.com/TomDeS/tosu-react/issues">an issue</a>.
-      </p>
-      <p>
-        <small>
-          <sup>
-            <b id="f1">[1]</b>
-          </sup>{' '}
-          As the 11-test isn&apos;t required anymore for new NL-bank accounts,
-          this check is not included.
-        </small>
-      </p>
+    <div className="grid">
+      <Section title="Bank account numbers" id="bank">
+        <p>The following bank account numbers are randomly generated:</p>
+        <BankAccount codes={['BE', 'NL']} />
+        <div>
+          <Link to="/bank">More details</Link>
+        </div>
+      </Section>
 
-      <p>Here you go, these bank account numbers are randomly generated:</p>
-      <BankAccount codes={['BE', 'NL']} />
-    </Section>
+      <Section title="VIN" id="vin">
+        <p>Random Vehicle Identification Number (VIN):</p>
 
-    <Section title="VIN" id="vin">
-      <p>
-        Here is a random Vehicle Identification Number. As the logic behind it
-        is quite special, only the length check passes. The number is generated
-        based on the current date/time.
-      </p>
-      <Vin />
-    </Section>
+        <Vin />
+        <div>
+          <Link to="/vin">More details</Link>
+        </div>
+      </Section>
+    </div>
 
-    <Section title="National number" id="natNum">
-      <p>Here are some random Belgian national numbers.</p>
-      <NationalNumber gender="M" />
-      <NationalNumber gender="F" />
-    </Section>
+    <div className="grid">
+      <Section title="National number" id="natNum">
+        <p>Here are some random Belgian national numbers.</p>
+        <NationalNumber gender="M" />
+        <NationalNumber gender="F" />
 
-    <Section title="Cryptography" id="crypto">
-      <Crypto />
-    </Section>
+        <div>
+          <Link to="/national-number">More details</Link>
+        </div>
+      </Section>
+
+      <Section title="Cryptography" id="crypto">
+        <Crypto />
+        <div>
+          <Link to="/crypto">More details</Link>
+        </div>
+      </Section>
+    </div>
 
     <Section title="Race" id="race">
       <p>

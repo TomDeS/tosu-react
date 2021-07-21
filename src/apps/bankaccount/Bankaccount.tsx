@@ -7,26 +7,40 @@ import Reload from '../../images/reload.svg'
 
 interface BankAccountProps {
   codes: string[]
+  showDetails?: boolean
 }
 
 interface AccountWrapperProps {
   country: string
   children: React.ReactNode
+  showDetails?: boolean
+}
+
+interface AccountDetailsProps {
+  country: string
+  identifier: string
+  bic: string
+  institution: string
 }
 
 function getBicList(country: any): string[] {
   // Loop through the data and if we have a match, take those.
-  // Array source: https://www.betaalvereniging.nl/en/focus/giro-based-and-online-payments/bank-identifier-code-bic-for-sepa-transactions/
+  // Array source:
+  // NL: https://www.betaalvereniging.nl/en/focus/giro-based-and-online-payments/bank-identifier-code-bic-for-sepa-transactions/
+  // BE: https://www.nbb.be/nl/betalingen-en-effecten/betalingsstandaarden/bankidentificatiecodes
 
-  const bics: string[] = bicValues.reduce((codes: any, currentValue) => {
+  const list: string[] = bicValues.reduce((codes: any, currentValue) => {
     if (currentValue.countryCode === country.country.toString().toUpperCase()) {
-      codes.push(currentValue.BIC)
+      codes.push(currentValue)
     }
     return codes
   }, [])
 
+  //  console.log(list[0].values)
   // Convert it to a flat list, since all values are possible candidates
-  return bics.flat()
+  // return bics.flat()
+  return list[0].values
+  //  return ['123']
 }
 
 function getRandomBic(country: string): string {
@@ -147,11 +161,57 @@ function calculateCheckSum(
   return result
 }
 
+const AccountDetails: React.FC<AccountDetailsProps> = ({
+  country,
+  identifier,
+  bic,
+  institution,
+}) => (
+  <details>
+    <summary>Details</summary>
+
+    <span>
+      <ul className="list-none">
+        <li>
+          Country:{' '}
+          <span id={`${country}code`} className="select-all text-mono">
+            {country}
+          </span>
+          <CopyButton data={`${country}code`} />
+        </li>
+        <li>
+          Bank Identifier: {' '}
+          <span id={country + identifier} className="select-all text-mono">
+            {identifier}
+          </span>
+          <CopyButton data={country + identifier} />
+        </li>
+        <li>
+          BIC:{' '}
+          <span id={country + bic} className="select-all text-mono">
+            {bic}
+          </span>
+          <CopyButton data={country + bic} />
+        </li>
+        <li>
+          Institution:{' '}
+          <span id={country + institution} className="select-all text-mono">
+            {institution}
+          </span>
+          <CopyButton data={country + institution} />
+        </li>
+      </ul>
+    </span>
+  </details>
+)
+
 const AccountWrapper: React.FC<AccountWrapperProps> = ({
   country,
   children,
+  showDetails,
 }) => {
-  const bic = getRandomBic({ country })
+  const bicDetails = getRandomBic({ country })
+  const bic = bicDetails.identifier
   let digits = 0
 
   if (country === 'BE') {
@@ -172,11 +232,23 @@ const AccountWrapper: React.FC<AccountWrapperProps> = ({
         {digits}
       </span>
       {children}
+
+      {showDetails && (
+        <AccountDetails
+          country={country || ''}
+          identifier={bic || ''}
+          bic={bicDetails?.bic || ''}
+          institution={bicDetails?.institution || ''}
+        />
+      )}
     </li>
   )
 }
 
-export const BankAccount: React.FC<BankAccountProps> = ({ codes }) => {
+export const BankAccount: React.FC<BankAccountProps> = ({
+  codes,
+  showDetails = false,
+}) => {
   const [refresh, setRefresh] = useState(false)
 
   const onSubmit = (e: any) => {
@@ -188,7 +260,11 @@ export const BankAccount: React.FC<BankAccountProps> = ({ codes }) => {
       <ul className="list-none">
         {codes &&
           codes.map((country: string) => (
-            <AccountWrapper key={country} country={country}>
+            <AccountWrapper
+              key={country}
+              country={country}
+              showDetails={showDetails}
+            >
               <CopyButton data={country} />
             </AccountWrapper>
           ))}

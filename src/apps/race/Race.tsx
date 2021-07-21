@@ -5,7 +5,7 @@ import randomNumber from '@/utilities/random'
 import round from '@/utilities/round'
 import nyan from '@/sound/nyan.mp3'
 import { useSnackbar } from '@/hooks/useSnackbar'
-import Snackbar from '@/components/snackbar'
+import Snackbar from '@/components/Snackbar'
 
 const { MIN_DURATION, DEFAULT_DURATION, MAX_DURATION } = settings.race
 

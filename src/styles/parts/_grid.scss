@@ -1,0 +1,18 @@
+// https://moderncss.dev/solutions-to-replace-the-12-column-grid/
+
+$minColWidth: 15rem;
+$gridGap: 2rem;
+
+.grid-wrap {
+  padding: $gridGap;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax($minColWidth, 1fr));
+  grid-gap: 2rem;
+
+  & + .grid {
+    margin-top: $gridGap;
+  }
+}
