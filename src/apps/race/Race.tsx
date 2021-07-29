@@ -98,7 +98,7 @@ const Racer: React.FC<RacerProps> = ({ children, name, score }) => (
   <>
     {children}
     <span className="racer--details">
-      {name} <small>{score > 0 ? `${score}%` : ''}</small>
+      {name} <small>{score > 0 ? `${score}m` : ''}</small>
     </span>
   </>
 )
@@ -145,7 +145,7 @@ const RacerScore: React.FC<RacerScoreProps> = ({
   return (
     <div className="track--wrapper" style={style}>
       <div className="track--progress" />
-      <div className="track--cat" title={`progress: ${score}%`} />
+      <div className="track--cat" title={`progress: ${score}m`} />
     </div>
   )
 }

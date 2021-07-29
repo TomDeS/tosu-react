@@ -29,6 +29,6 @@ module.exports = {
         theme_color: '#202b38',
       },
     },
-    'gatsby-plugin-offline',
+    //    'gatsby-plugin-offline',
   ],
 }

@@ -13,16 +13,7 @@ export const Header: React.FC<HeaderProps> = ({ siteTitle }: HeaderProps) => (
       <Link to="/">{siteTitle}</Link>
       <ul className="site-nav">
         <li>
-          <Link to="/bank">Bank accounts</Link>
-        </li>
-        <li>
-          <Link to="/vin">VIN</Link>
-        </li>
-        <li>
-          <Link to="/national-number">Nat. Nr.</Link>
-        </li>
-        <li>
-          <Link to="/crypto">Crypto</Link>
+          <Link to="/">Tools</Link>
         </li>
         <li>
           <Link to="/race">Race</Link>

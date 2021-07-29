@@ -1,0 +1,30 @@
+$box-shadow-sm: 4px 20px 47px 0 rgba(17, 17, 17, 0.1);
+$box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+
+.tosu--card {
+  box-shadow: $box-shadow-sm;
+  //  height: 100%;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  margin-bottom: 3rem;
+  background-color: var(--background-alt);
+}
+
+.tosu--card--inner {
+  padding: 1rem;
+  max-width: $max-card-width;
+  margin: 0 auto;
+}
+
+.tosu--card--body,
+.tosu--card--heading {
+  margin: 0;
+  p {
+    color: var(--color-on-surface);
+  }
+}
+@media (max-width: $breakpoint-large) {
+  .tosu--card--heading {
+    text-align: center;
+  }
+}

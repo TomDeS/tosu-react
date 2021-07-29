@@ -59,7 +59,7 @@ summary {
     content: '';
     border-width: 0.4rem;
     border-style: solid;
-    border-color: transparent transparent transparent var(--text-main);
+    border-color: transparent transparent transparent var(--color-on-surface);
     position: absolute;
     top: 1.3rem;
     left: 1rem;
@@ -89,7 +89,7 @@ details > :not(summary) {
 }
 
 summary::-webkit-details-marker {
-  color: var(--text-main);
+  color: var(--color-on-surface);
 }
 
 nav {

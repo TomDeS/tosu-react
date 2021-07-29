@@ -1,14 +1,17 @@
 $breakpoint-small: 800px;
+$breakpoint-large: 1140px;
+$max-text-width: 80ch;
+$max-card-width: 60ch;
 
 body {
-  --background-body: #202b38;
+  --color-surface: #29344b;
   --background: #161f27;
   --background-alt: #1a242f;
   --selection: #1c76c5;
-  --text-main: #dbdbdb;
+  --color-on-surface: #ded4e4;
   --text-bright: #fff;
   --text-muted: #a9b1ba;
-  --text-contrast: var(--text-main);
+  --text-contrast: var(--color-on-surface);
   --links: #41adff;
   --focus: #0096bfab;
   --border: #526980;
@@ -26,42 +29,26 @@ body {
   --font-weight-thick: 400;
   --font-size: 1.25rem;
   --line-height: 1.625;
-  --max-width: 61.25rem;
+  --max-width: 87.5rem;
   --text-shadow: none;
 }
 
 body[data-theme='jellefy'] {
-  --background-body: #f3f2f1;
+  --color-surface: #f3f2f1;
   --background: #fff;
   --background-alt: #afbbb4;
   --selection: #1c76c5;
-  --text-main: #323130;
+  --color-on-surface: #323130;
   --text-bright: #323130;
   --text-muted: #323130;
-  --text-contrast: var(--background-body);
+  --text-contrast: var(--color-surface);
   --links: #41adff;
-  --focus: #0096bfab;
-  --border: #526980;
-  --animation-duration: 0.1s;
-  --button-hover: #afbbb4;
-  --scrollbar-thumb: var(--button-hover);
-  --scrollbar-thumb-hover: color-mod(var(--scrollbar-thumb) lightness(+8%));
-  --form-placeholder: #a9a9a9;
-  --font-family: 'Nunito Sans', system-ui, -apple-system, 'Segoe UI', Roboto,
-    'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  --font-family-mono: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
-    'Courier New', monospace;
-  --font-weight: 300;
-  --font-weight-thick: 400;
-  --font-size: 1.25rem;
-  --line-height: 1.625;
-  --max-width: 61.25rem;
-  --text-shadow: none;
+  --focus: rgba(0, 150, 191, 0.67);
+  --button-hover: rgba(0, 150, 191, 0.67);
 }
 
 body[data-theme='jonify'] {
-  --background-body: linear-gradient(
+  --color-surface: linear-gradient(
     0deg,
     rgba(168, 0, 255, 1) 0%,
     rgba(0, 121, 255, 1) 20%,
@@ -73,26 +60,15 @@ body[data-theme='jonify'] {
   --background: #ffff00;
   --background-alt: #1a242f;
   --selection: #1c76c5;
-  --text-main: #dbdbdb;
+  --color-on-surface: #dbdbdb;
   --text-bright: #fff;
   --text-muted: #a9b1ba;
-  --text-contrast: var(--text-main);
+  --text-contrast: var(--color-on-surface);
   --links: #8000ff;
   --focus: #0096bfab;
   --border: #526980;
-  --animation-duration: 0.1s;
   --button-hover: rgb(0, 238, 255);
-  --scrollbar-thumb: var(--button-hover);
-  --scrollbar-thumb-hover: color-mod(var(--scrollbar-thumb) lightness(+8%));
-  --form-placeholder: #a9a9a9;
   --font-family: 'Comic Sans MS', 'Comic Sans', cursive;
-  --font-family-mono: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
-    'Courier New', monospace;
-  --font-weight: 300;
-  --font-weight-thick: 400;
-  --font-size: 1.25rem;
-  --line-height: 1.625;
-  --max-width: 61.25rem;
   --text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9,
     0 5px 0 #aaa, 0 6px 1px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 0, 0, 0.1),
     0 1px 3px rgba(0, 0, 0, 0.3), 0 3px 5px rgba(0, 0, 0, 0.2),
