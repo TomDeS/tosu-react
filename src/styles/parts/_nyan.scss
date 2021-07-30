@@ -91,7 +91,7 @@
   margin-left: -0.6rem;
   width: 3rem;
   height: 1.5rem;
-  background-image: url('../../static/img/nyan/nyan1.svg');
+  background-image: url('../../static/img/nyan/nyan1.png');
   background-repeat: no-repeat;
   background-position: left center;
   background-size: contain;
@@ -101,21 +101,21 @@
 
 @keyframes cat {
   0% {
-    background-image: url('../../static/img/nyan/nyan1.svg');
+    background-image: url('../../static/img/nyan/nyan1.png');
   }
   20% {
-    background-image: url('../../static/img/nyan/nyan2.svg');
+    background-image: url('../../static/img/nyan/nyan2.png');
   }
   40% {
-    background-image: url('../../static/img/nyan/nyan3.svg');
+    background-image: url('../../static/img/nyan/nyan3.png');
   }
   60% {
-    background-image: url('../../static/img/nyan/nyan4.svg');
+    background-image: url('../../static/img/nyan/nyan4.png');
   }
   80% {
-    background-image: url('../../static/img/nyan/nyan5.svg');
+    background-image: url('../../static/img/nyan/nyan5.png');
   }
   100% {
-    background-image: url('../../static/img/nyan/nyan6.svg');
+    background-image: url('../../static/img/nyan/nyan6.png');
   }
 }
