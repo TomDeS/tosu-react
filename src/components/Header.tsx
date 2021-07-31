@@ -13,10 +13,22 @@ export const Header: React.FC<HeaderProps> = ({ siteTitle }: HeaderProps) => (
       <Link to="/">{siteTitle}</Link>
       <ul className="site-nav">
         <li>
-          <Link to="/">Tools</Link>
+          <Link
+            to="/"
+            aria-label="menu item"
+            activeClassName="site-nav--active"
+          >
+            Tools
+          </Link>
         </li>
         <li>
-          <Link to="/race">Race</Link>
+          <Link
+            to="/race"
+            aria-label="menu item"
+            activeClassName="site-nav--active"
+          >
+            Race
+          </Link>
         </li>
         <li>
           <ThemeToggler />
