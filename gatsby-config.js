@@ -13,7 +13,19 @@ module.exports = {
       },
     },
 
-    'gatsby-plugin-netlify',
+    {
+      resolve: 'gatsby-plugin-netlify',
+      options: {
+        headers: {
+          '/*': [
+            'X-XSS-Protection: 1; mode=block',
+            'X-Content-Type-Options: nosniff',
+            'Referrer-Policy: same-origin',
+            'Content-Security-Policy: frame-ancestors \'self\' http://localhost:7001 https://localhost:7001',
+          ],
+        },
+      },
+    },
 
     {
       resolve: 'gatsby-plugin-manifest',
