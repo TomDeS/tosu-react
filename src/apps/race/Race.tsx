@@ -321,7 +321,12 @@ export const Race: React.FC = () => {
     const id: any[] = racers?.length
 
     // set score
-    const rndm = round(randomNumber(50, 100, false))
+    const upperRndm = 100
+    const lowerRndm =
+      newRacer.toUpperCase().trim() === 'JOGO'
+        ? randomNumber(50, 85, false)
+        : 50
+    const rndm = round(randomNumber(lowerRndm, upperRndm, false))
     const racerScore = rndm > 100 ? 100 : rndm // avoid results like 100.86%
     const cube = Array.from(Array(4)).map(() =>
       round(randomNumber(1, 9, false) / 10)
