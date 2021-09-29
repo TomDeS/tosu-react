@@ -1,3 +1,10 @@
+// Import environment file
+// https://www.gatsbyjs.com/docs/how-to/local-development/environment-variables/#defining-environment-variables
+
+require('dotenv').config({
+  path: '.env',
+})
+
 module.exports = {
   // Since `gatsby-plugin-typescript` is automatically included in Gatsby you
   // don't need to define it here (just if you need to change the options)
